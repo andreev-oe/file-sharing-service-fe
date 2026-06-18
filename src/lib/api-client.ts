@@ -42,7 +42,8 @@ api.interceptors.response.use(
     const originalRequest = error.config as InternalAxiosRequestConfig & { _retry?: boolean };
     const status = error.response?.status;
 
-    if (status === 401 && !originalRequest._retry && originalRequest.url !== REFRESH_URL) {
+    const { accessToken } = useAuthStore.getState();
+    if (status === 401 && !originalRequest._retry && originalRequest.url !== REFRESH_URL && accessToken) {
       if (isRefreshing) {
         return new Promise<string>((resolve, reject) => {
           failedQueue.push({ resolve, reject });

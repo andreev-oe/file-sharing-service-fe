@@ -1,11 +1,14 @@
 import FolderOpenIcon from '@mui/icons-material/FolderOpen';
-import { Box, Card, CardContent, Skeleton, Stack, Typography } from '@mui/material';
-import { Link } from 'react-router-dom';
+import { Box, Card, CardContent, Divider, Stack, Typography } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
 
 import { Head } from '@/components/seo';
 import { paths } from '@/config/paths';
+import { LoginForm } from '@/features/auth/components/login-form';
 
 export const LoginRoute = () => {
+  const navigate = useNavigate();
+
   return (
     <>
       <Head title="Вход" />
@@ -42,28 +45,34 @@ export const LoginRoute = () => {
             </Typography>
           </Stack>
 
-          {/* Card */}
-          <Card sx={{ width: '100%', p: 0.5 }}>
-            <CardContent>
-              <Stack gap={2}>
-                <Skeleton variant="rounded" height={40} animation={false} sx={{ borderRadius: 2 }} />
-                <Skeleton variant="rounded" height={40} animation={false} sx={{ borderRadius: 2 }} />
-                <Skeleton
-                  variant="rounded"
-                  height={42}
-                  animation={false}
-                  sx={{ borderRadius: 2, bgcolor: 'primary.light' }}
-                />
-              </Stack>
+          {/* Form card */}
+          <Card sx={{ width: '100%' }}>
+            <CardContent sx={{ p: 3, '&:last-child': { pb: 3 } }}>
+              <LoginForm onSuccess={() => navigate(paths.drive.getHref())} />
             </CardContent>
           </Card>
 
-          {/* Footer link */}
-          <Typography variant="body2" color="text.secondary">
-            Нет аккаунта?{' '}
-            <Link to={paths.register.getHref()} style={{ color: '#FB8C00', fontWeight: 600, textDecoration: 'none' }}>
+          {/* Footer */}
+          <Stack direction="row" alignItems="center" gap={1}>
+            <Divider sx={{ flex: 1 }} />
+            <Typography variant="body2" color="text.secondary">
+              Нет аккаунта?
+            </Typography>
+            <Divider sx={{ flex: 1 }} />
+          </Stack>
+          <Typography variant="body2">
+            <Box
+              component="a"
+              href={paths.register.getHref()}
+              sx={{
+                color: 'primary.main',
+                fontWeight: 600,
+                textDecoration: 'none',
+                '&:hover': { textDecoration: 'underline' },
+              }}
+            >
               Зарегистрироваться
-            </Link>
+            </Box>
           </Typography>
         </Stack>
       </Box>

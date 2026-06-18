@@ -8,7 +8,8 @@ export default defineConfig({
   base: './',
   plugins: [react(), viteTsconfigPaths()],
   server: {
-    port: 5173,
+    port: 4173,
+    strictPort: true,
   },
   preview: {
     port: 5173,

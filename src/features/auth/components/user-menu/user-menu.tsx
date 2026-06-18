@@ -9,8 +9,11 @@ import { Link } from 'react-router-dom';
 import { paths } from '@/config/paths';
 import { useAuthStore } from '@/store/auth.store';
 
+import { useLogout } from '../../hooks/use-logout';
+
 export const UserMenu = () => {
-  const { user, clearAuth } = useAuthStore();
+  const { user } = useAuthStore();
+  const { mutate: logout } = useLogout();
   const [anchorElement, setAnchorElement] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorElement);
 
@@ -23,7 +26,7 @@ export const UserMenu = () => {
   };
 
   const handleSignOut = () => {
-    clearAuth();
+    logout();
     handleClose();
   };
 
