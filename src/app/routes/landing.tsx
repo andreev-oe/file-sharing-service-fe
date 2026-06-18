@@ -1,5 +1,7 @@
-import { PageContainer } from '@/components/ui/page-container';
+import { Navigate } from 'react-router-dom';
+
+import { paths } from '@/config/paths';
 
 export const LandingRoute = () => {
-  return <PageContainer>Добро пожаловать</PageContainer>;
+  return <Navigate to={paths.drive.getHref()} replace />;
 };

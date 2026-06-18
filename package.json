@@ -70,7 +70,7 @@
   },
   "lint-staged": {
     "*.+(ts|tsx)": [
-      "yarn lint:staged",
+      "yarn lint:staged --fix",
       "bash -c 'yarn check-types'"
     ]
   }

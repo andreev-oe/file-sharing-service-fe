@@ -25,19 +25,19 @@ export const AppProvider = ({ children }: AppProviderProps) => {
   );
 
   return (
-    <Suspense fallback={<div>Loading app...</div>}>
+    <Suspense fallback={<div>Loading...</div>}>
       <ErrorBoundary FallbackComponent={MainErrorFallback}>
         <ThemeProvider>
           <HelmetProvider>
-            <AuthProvider>
-              <QueryClientProvider client={queryClient}>
-                <NotificationsProvider>
+            <QueryClientProvider client={queryClient}>
+              <NotificationsProvider>
+                <AuthProvider>
                   <ModalsProvider />
                   {import.meta.env.DEV && <ReactQueryDevtools />}
                   {children}
-                </NotificationsProvider>
-              </QueryClientProvider>
-            </AuthProvider>
+                </AuthProvider>
+              </NotificationsProvider>
+            </QueryClientProvider>
           </HelmetProvider>
         </ThemeProvider>
       </ErrorBoundary>

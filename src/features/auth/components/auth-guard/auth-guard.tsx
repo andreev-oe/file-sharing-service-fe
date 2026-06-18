@@ -1,19 +1,15 @@
 import { ReactNode } from 'react';
 
-import { PageLoader } from 'src/components/ui/page-loader';
+import { PageLoader } from '@/components/ui/page-loader';
 
 import { useAuth } from '../../hooks/use-auth';
 
-export type AuthGuardProps = {
-  children: ReactNode;
-};
-
-export const AuthGuard = ({ children }: AuthGuardProps) => {
+export const AuthGuard = ({ children }: { children: ReactNode }) => {
   const { isLoading } = useAuth();
 
   if (isLoading) {
     return <PageLoader />;
   }
 
-  return children;
+  return <>{children}</>;
 };
