@@ -1,6 +1,7 @@
 import EmailIcon from '@mui/icons-material/Email';
 import PersonIcon from '@mui/icons-material/Person';
 import { Box, Card, CardContent, Chip, Divider, Stack, Typography } from '@mui/material';
+import { styled } from '@mui/material/styles';
 
 import { Head } from '@/components/seo';
 import { AvatarUpload } from '@/features/users/components/avatar-upload';
@@ -19,29 +20,26 @@ export const ProfileRoute = () => {
         </Typography>
 
         <Stack gap={2.5}>
-          {/* Info card */}
           <Card>
-            <CardContent sx={{ p: 3 }}>
+            <PaddedCardContent>
               <Stack direction={{ xs: 'column', sm: 'row' }} gap={3} alignItems={{ sm: 'flex-start' }}>
                 <AvatarUpload />
 
                 <Stack gap={1} flex={1}>
                   <Stack direction="row" alignItems="center" gap={1} flexWrap="wrap">
                     <Typography variant="h6">{user?.name}</Typography>
-                    {user?.role === 'admin' && (
-                      <Chip label="Admin" size="small" color="primary" sx={{ height: 20, fontSize: 11 }} />
-                    )}
+                    {user?.role === 'admin' && <AdminChip label="Admin" size="small" color="primary" />}
                   </Stack>
 
                   <Stack direction="row" alignItems="center" gap={0.75}>
-                    <PersonIcon sx={{ fontSize: 15, color: 'text.secondary' }} />
+                    <MetaPersonIcon />
                     <Typography variant="body2" color="text.secondary">
                       @{user?.username}
                     </Typography>
                   </Stack>
 
                   <Stack direction="row" alignItems="center" gap={0.75}>
-                    <EmailIcon sx={{ fontSize: 15, color: 'text.secondary' }} />
+                    <MetaEmailIcon />
                     <Typography variant="body2" color="text.secondary">
                       {user?.email}
                     </Typography>
@@ -49,25 +47,55 @@ export const ProfileRoute = () => {
 
                   {user?.bio && (
                     <>
-                      <Divider sx={{ my: 0.5 }} />
-                      <Typography variant="body2" color="text.secondary" sx={{ whiteSpace: 'pre-wrap' }}>
+                      <BioSectionDivider />
+                      <BioText variant="body2" color="text.secondary">
                         {user.bio}
-                      </Typography>
+                      </BioText>
                     </>
                   )}
                 </Stack>
               </Stack>
-            </CardContent>
+            </PaddedCardContent>
           </Card>
 
-          {/* Edit form card */}
           <Card>
-            <CardContent sx={{ p: 3 }}>
+            <PaddedCardContent>
               <ProfileForm />
-            </CardContent>
+            </PaddedCardContent>
           </Card>
         </Stack>
       </Box>
     </>
   );
 };
+
+const PaddedCardContent = styled(CardContent)(({ theme }) => ({
+  padding: theme.spacing(3),
+  '&:last-child': {
+    paddingBottom: theme.spacing(3),
+  },
+}));
+
+const AdminChip = styled(Chip)({
+  height: 20,
+  fontSize: 11,
+});
+
+const MetaPersonIcon = styled(PersonIcon)(({ theme }) => ({
+  fontSize: 15,
+  color: theme.palette.text.secondary,
+}));
+
+const MetaEmailIcon = styled(EmailIcon)(({ theme }) => ({
+  fontSize: 15,
+  color: theme.palette.text.secondary,
+}));
+
+const BioSectionDivider = styled(Divider)(({ theme }) => ({
+  marginTop: theme.spacing(0.5),
+  marginBottom: theme.spacing(0.5),
+}));
+
+const BioText = styled(Typography)({
+  whiteSpace: 'pre-wrap',
+});

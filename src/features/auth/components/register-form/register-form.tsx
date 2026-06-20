@@ -2,6 +2,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import { Alert, IconButton, InputAdornment, Stack, TextField } from '@mui/material';
+import { styled } from '@mui/material/styles';
 import { useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { z } from 'zod';
@@ -123,9 +124,7 @@ export const RegisterForm = ({ onSuccess }: RegisterFormProps) => {
       />
 
       {registerMutation.error && (
-        <Alert severity="error" sx={{ borderRadius: 2 }}>
-          {getApiErrorMessage(registerMutation.error, 'Ошибка регистрации')}
-        </Alert>
+        <RoundedAlert severity="error">{getApiErrorMessage(registerMutation.error, 'Ошибка регистрации')}</RoundedAlert>
       )}
 
       <Button type="submit" variant="contained" fullWidth size="large" loading={registerMutation.isPending}>
@@ -134,3 +133,7 @@ export const RegisterForm = ({ onSuccess }: RegisterFormProps) => {
     </Stack>
   );
 };
+
+const RoundedAlert = styled(Alert)(({ theme }) => ({
+  borderRadius: theme.shape.borderRadius * 2,
+}));

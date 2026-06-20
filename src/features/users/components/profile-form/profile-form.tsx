@@ -1,5 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Alert, Stack, TextField, Typography } from '@mui/material';
+import { styled } from '@mui/material/styles';
 import { useEffect } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { z } from 'zod';
@@ -80,11 +81,7 @@ export const ProfileForm = () => {
         )}
       />
 
-      {updateMutation.error && (
-        <Alert severity="error" sx={{ borderRadius: 2 }}>
-          {getApiErrorMessage(updateMutation.error)}
-        </Alert>
-      )}
+      {updateMutation.error && <RoundedAlert severity="error">{getApiErrorMessage(updateMutation.error)}</RoundedAlert>}
 
       <Stack direction="row" justifyContent="flex-end">
         <Button type="submit" variant="contained" loading={updateMutation.isPending}>
@@ -94,3 +91,7 @@ export const ProfileForm = () => {
     </Stack>
   );
 };
+
+const RoundedAlert = styled(Alert)(({ theme }) => ({
+  borderRadius: theme.shape.borderRadius * 2,
+}));

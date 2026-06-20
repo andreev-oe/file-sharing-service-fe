@@ -1,5 +1,6 @@
 import FolderOpenIcon from '@mui/icons-material/FolderOpen';
 import { Box, Stack, Typography } from '@mui/material';
+import { styled } from '@mui/material/styles';
 import { useParams } from 'react-router-dom';
 
 import { Head } from '@/components/seo';
@@ -15,7 +16,7 @@ export const FolderRoute = () => {
           Папка
         </Typography>
         <Stack alignItems="center" justifyContent="center" py={10} gap={2}>
-          <FolderOpenIcon sx={{ fontSize: 72, color: 'primary.light' }} />
+          <EmptyStateIcon />
           <Typography variant="body2" color="text.secondary">
             ID: {folderId}
           </Typography>
@@ -24,3 +25,8 @@ export const FolderRoute = () => {
     </>
   );
 };
+
+const EmptyStateIcon = styled(FolderOpenIcon)(({ theme }) => ({
+  fontSize: 72,
+  color: theme.palette.primary.light,
+}));

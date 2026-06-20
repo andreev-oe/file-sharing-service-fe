@@ -1,4 +1,5 @@
 import { Box, Button, Typography } from '@mui/material';
+import { styled } from '@mui/material/styles';
 import { Link } from 'react-router-dom';
 
 import { Head } from '@/components/seo';
@@ -8,36 +9,43 @@ export const NotFoundRoute = () => {
   return (
     <>
       <Head title="404 — Страница не найдена" />
-      <Box
-        sx={{
-          minHeight: '100vh',
-          bgcolor: 'background.default',
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          justifyContent: 'center',
-          gap: 2,
-          p: 3,
-        }}
-      >
-        <Typography
-          variant="h1"
-          fontWeight={800}
-          color="primary.main"
-          sx={{ fontSize: { xs: 80, sm: 120 }, lineHeight: 1 }}
-        >
+      <NotFoundRoot>
+        <ErrorCodeText variant="h1" fontWeight={800} color="primary.main">
           404
-        </Typography>
+        </ErrorCodeText>
         <Typography variant="h5" fontWeight={600} textAlign="center">
           Страница не найдена
         </Typography>
         <Typography color="text.secondary" textAlign="center">
           Запрашиваемая страница не существует или была удалена
         </Typography>
-        <Button component={Link} to={paths.home.getHref()} variant="contained" size="large" sx={{ mt: 1 }}>
+        <HomeButton component={Link} to={paths.home.getHref()} variant="contained" size="large">
           На главную
-        </Button>
-      </Box>
+        </HomeButton>
+      </NotFoundRoot>
     </>
   );
 };
+
+const NotFoundRoot = styled(Box)(({ theme }) => ({
+  minHeight: '100vh',
+  backgroundColor: theme.palette.background.default,
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'center',
+  justifyContent: 'center',
+  gap: theme.spacing(2),
+  padding: theme.spacing(3),
+}));
+
+const ErrorCodeText = styled(Typography)(({ theme }) => ({
+  fontSize: 80,
+  lineHeight: 1,
+  [theme.breakpoints.up('sm')]: {
+    fontSize: 120,
+  },
+}));
+
+const HomeButton = styled(Button)(({ theme }) => ({
+  marginTop: theme.spacing(1),
+})) as typeof Button;

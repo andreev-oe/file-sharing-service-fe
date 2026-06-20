@@ -2,6 +2,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import { Alert, IconButton, InputAdornment, Stack, TextField } from '@mui/material';
+import { styled } from '@mui/material/styles';
 import { useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { z } from 'zod';
@@ -82,9 +83,9 @@ export const LoginForm = ({ onSuccess }: LoginFormProps) => {
       />
 
       {loginMutation.error && (
-        <Alert severity="error" sx={{ borderRadius: 2 }}>
+        <RoundedAlert severity="error">
           {getApiErrorMessage(loginMutation.error, 'Неверный email или пароль')}
-        </Alert>
+        </RoundedAlert>
       )}
 
       <Button type="submit" variant="contained" fullWidth size="large" loading={loginMutation.isPending}>
@@ -93,3 +94,7 @@ export const LoginForm = ({ onSuccess }: LoginFormProps) => {
     </Stack>
   );
 };
+
+const RoundedAlert = styled(Alert)(({ theme }) => ({
+  borderRadius: theme.shape.borderRadius * 2,
+}));

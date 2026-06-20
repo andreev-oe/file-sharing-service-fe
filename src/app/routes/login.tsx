@@ -1,81 +1,103 @@
 import FolderOpenIcon from '@mui/icons-material/FolderOpen';
 import { Box, Card, CardContent, Divider, Stack, Typography } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
+import { styled } from '@mui/material/styles';
+import { Navigate, useNavigate } from 'react-router-dom';
 
 import { Head } from '@/components/seo';
 import { paths } from '@/config/paths';
 import { LoginForm } from '@/features/auth/components/login-form';
+import { useAuthStore } from '@/store/auth.store';
 
 export const LoginRoute = () => {
   const navigate = useNavigate();
+  const { isAuthenticated } = useAuthStore();
+
+  if (isAuthenticated) {
+    return <Navigate to={paths.drive.getHref()} replace />;
+  }
 
   return (
     <>
       <Head title="Вход" />
-      <Box
-        sx={{
-          minHeight: '100vh',
-          bgcolor: 'background.default',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          p: 2,
-        }}
-      >
+      <AuthPageRoot>
         <Stack alignItems="center" gap={3} width="100%" maxWidth={420}>
-          {/* Brand */}
           <Stack alignItems="center" gap={1.5}>
-            <Box
-              sx={{
-                width: 52,
-                height: 52,
-                bgcolor: 'primary.main',
-                borderRadius: 2,
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                boxShadow: '0 4px 16px rgba(251,140,0,0.35)',
-              }}
-            >
-              <FolderOpenIcon sx={{ color: '#fff', fontSize: 28 }} />
-            </Box>
+            <BrandIconBox>
+              <BrandIcon />
+            </BrandIconBox>
             <Typography variant="h5">FileShare Pro</Typography>
             <Typography color="text.secondary" variant="body2">
               Войдите в свой аккаунт
             </Typography>
           </Stack>
 
-          {/* Form card */}
-          <Card sx={{ width: '100%' }}>
-            <CardContent sx={{ p: 3, '&:last-child': { pb: 3 } }}>
+          <FullWidthCard>
+            <PaddedCardContent>
               <LoginForm onSuccess={() => navigate(paths.drive.getHref())} />
-            </CardContent>
-          </Card>
+            </PaddedCardContent>
+          </FullWidthCard>
 
-          {/* Footer */}
           <Stack direction="row" alignItems="center" gap={1}>
-            <Divider sx={{ flex: 1 }} />
+            <FlexDivider />
             <Typography variant="body2" color="text.secondary">
               Нет аккаунта?
             </Typography>
-            <Divider sx={{ flex: 1 }} />
+            <FlexDivider />
           </Stack>
           <Typography variant="body2">
-            <Box
-              component="a"
-              href={paths.register.getHref()}
-              sx={{
-                color: 'primary.main',
-                fontWeight: 600,
-                textDecoration: 'none',
-                '&:hover': { textDecoration: 'underline' },
-              }}
-            >
-              Зарегистрироваться
-            </Box>
+            <AuthLink href={paths.register.getHref()}>Зарегистрироваться</AuthLink>
           </Typography>
         </Stack>
-      </Box>
+      </AuthPageRoot>
     </>
   );
 };
+
+const AuthPageRoot = styled(Box)(({ theme }) => ({
+  minHeight: '100vh',
+  backgroundColor: theme.palette.background.default,
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  padding: theme.spacing(2),
+}));
+
+const BrandIconBox = styled(Box)(({ theme }) => ({
+  width: 52,
+  height: 52,
+  backgroundColor: theme.palette.primary.main,
+  borderRadius: theme.shape.borderRadius * 2,
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  boxShadow: '0 4px 16px rgba(251,140,0,0.35)',
+}));
+
+const BrandIcon = styled(FolderOpenIcon)({
+  color: '#fff',
+  fontSize: 28,
+});
+
+const FullWidthCard = styled(Card)({
+  width: '100%',
+});
+
+const PaddedCardContent = styled(CardContent)(({ theme }) => ({
+  padding: theme.spacing(3),
+  '&:last-child': {
+    paddingBottom: theme.spacing(3),
+  },
+}));
+
+const FlexDivider = styled(Divider)({
+  flex: 1,
+});
+
+const AuthLink = styled('a')(({ theme }) => ({
+  color: theme.palette.primary.main,
+  fontWeight: 600,
+  textDecoration: 'none',
+  '&:hover': {
+    textDecoration: 'underline',
+  },
+}));

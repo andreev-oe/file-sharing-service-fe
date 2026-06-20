@@ -2,6 +2,7 @@ import AssessmentIcon from '@mui/icons-material/Assessment';
 import FolderOpenIcon from '@mui/icons-material/FolderOpen';
 import GroupIcon from '@mui/icons-material/Group';
 import { Box, List, ListItemButton, ListItemIcon, ListItemText, Stack, Typography } from '@mui/material';
+import { styled } from '@mui/material/styles';
 import { PropsWithChildren, ReactNode } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 
@@ -10,6 +11,8 @@ import { UserMenu } from '@/features/auth/components/user-menu';
 
 const SIDEBAR_WIDTH = 240;
 const HEADER_HEIGHT = 64;
+const SIDEBAR_Z_INDEX = 100;
+const HEADER_Z_INDEX = 99;
 
 type NavItem = {
   icon: ReactNode;
@@ -28,62 +31,21 @@ const SidebarNavItem = ({ icon, label, to }: NavItem) => {
   const isActive = pathname === to || (to !== '/' && pathname.startsWith(`${to}/`));
 
   return (
-    <ListItemButton component={Link} to={to} selected={isActive} sx={{ px: 1.5, py: 0.875 }}>
-      <ListItemIcon sx={{ minWidth: 36 }}>{icon}</ListItemIcon>
+    <NavListItemButton component={Link} to={to} selected={isActive}>
+      <CompactListItemIcon>{icon}</CompactListItemIcon>
       <ListItemText primary={label} primaryTypographyProps={{ fontSize: 14, fontWeight: isActive ? 600 : 400 }} />
-    </ListItemButton>
+    </NavListItemButton>
   );
 };
 
 export const DashboardLayout = ({ children }: PropsWithChildren) => {
   return (
-    <Stack direction="row" sx={{ minHeight: '100vh' }}>
-      {/* Sidebar */}
-      <Box
-        component="nav"
-        sx={{
-          width: SIDEBAR_WIDTH,
-          flexShrink: 0,
-          bgcolor: 'background.paper',
-          borderRight: '1px solid',
-          borderColor: 'divider',
-          display: 'flex',
-          flexDirection: 'column',
-          position: 'fixed',
-          top: 0,
-          left: 0,
-          height: '100vh',
-          zIndex: 100,
-          overflowY: 'auto',
-        }}
-      >
-        {/* Brand */}
-        <Stack
-          direction="row"
-          alignItems="center"
-          gap={1.5}
-          sx={{
-            height: HEADER_HEIGHT,
-            px: 2.5,
-            flexShrink: 0,
-            borderBottom: '1px solid',
-            borderColor: 'divider',
-          }}
-        >
-          <Box
-            sx={{
-              width: 34,
-              height: 34,
-              bgcolor: 'primary.main',
-              borderRadius: 1.5,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              flexShrink: 0,
-            }}
-          >
-            <FolderOpenIcon sx={{ color: '#fff', fontSize: 18 }} />
-          </Box>
+    <RootLayout direction="row">
+      <Sidebar component="nav">
+        <SidebarBrandRow direction="row" alignItems="center" gap={1.5}>
+          <LogoIconBox>
+            <LogoIcon />
+          </LogoIconBox>
           <Box>
             <Typography variant="subtitle1" fontWeight={700} lineHeight={1.2}>
               FileShare
@@ -92,76 +54,145 @@ export const DashboardLayout = ({ children }: PropsWithChildren) => {
               Pro
             </Typography>
           </Box>
-        </Stack>
+        </SidebarBrandRow>
 
-        {/* Navigation */}
-        <Box sx={{ flex: 1, py: 1.5, px: 1 }}>
-          <Typography
-            variant="caption"
-            color="text.secondary"
-            sx={{ px: 1.5, mb: 0.5, display: 'block', fontWeight: 600, letterSpacing: '0.05em' }}
-          >
+        <NavigationArea>
+          <NavSectionLabel variant="caption" color="text.secondary">
             НАВИГАЦИЯ
-          </Typography>
+          </NavSectionLabel>
           <List disablePadding>
             {NAV_ITEMS.map((item) => (
               <SidebarNavItem key={item.to} {...item} />
             ))}
           </List>
-        </Box>
+        </NavigationArea>
 
-        {/* Footer */}
-        <Box
-          sx={{
-            px: 2,
-            py: 1.5,
-            borderTop: '1px solid',
-            borderColor: 'divider',
-            flexShrink: 0,
-          }}
-        >
+        <SidebarFooter>
           <Typography variant="caption" color="text.secondary">
             © 2025 FileShare Pro
           </Typography>
-        </Box>
-      </Box>
+        </SidebarFooter>
+      </Sidebar>
 
-      {/* Main area */}
-      <Stack
-        sx={{
-          ml: `${SIDEBAR_WIDTH}px`,
-          flex: 1,
-          minHeight: '100vh',
-          bgcolor: 'background.default',
-        }}
-      >
-        {/* Header */}
-        <Box
-          component="header"
-          sx={{
-            height: HEADER_HEIGHT,
-            bgcolor: 'background.paper',
-            borderBottom: '1px solid',
-            borderColor: 'divider',
-            display: 'flex',
-            alignItems: 'center',
-            px: 3,
-            gap: 2,
-            position: 'sticky',
-            top: 0,
-            zIndex: 99,
-            flexShrink: 0,
-          }}
-        >
-          <Box sx={{ flex: 1 }} />
+      <MainArea>
+        <AppHeader component="header">
+          <FlexSpacer />
           <UserMenu />
-        </Box>
+        </AppHeader>
 
-        {/* Page content */}
-        <Box component="main" sx={{ flex: 1, overflow: 'auto' }}>
-          {children}
-        </Box>
-      </Stack>
-    </Stack>
+        <MainContent component="main">{children}</MainContent>
+      </MainArea>
+    </RootLayout>
   );
 };
+
+const RootLayout = styled(Stack)({
+  minHeight: '100vh',
+});
+
+const Sidebar = styled(Box)(({ theme }) => ({
+  width: SIDEBAR_WIDTH,
+  flexShrink: 0,
+  backgroundColor: theme.palette.background.paper,
+  borderRight: `1px solid ${theme.palette.divider}`,
+  display: 'flex',
+  flexDirection: 'column',
+  position: 'fixed',
+  top: 0,
+  left: 0,
+  height: '100vh',
+  zIndex: SIDEBAR_Z_INDEX,
+  overflowY: 'auto',
+})) as typeof Box;
+
+const SidebarBrandRow = styled(Stack)(({ theme }) => ({
+  height: HEADER_HEIGHT,
+  paddingLeft: theme.spacing(2.5),
+  paddingRight: theme.spacing(2.5),
+  flexShrink: 0,
+  borderBottom: `1px solid ${theme.palette.divider}`,
+}));
+
+const LogoIconBox = styled(Box)(({ theme }) => ({
+  width: 34,
+  height: 34,
+  backgroundColor: theme.palette.primary.main,
+  borderRadius: theme.shape.borderRadius * 1.5,
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  flexShrink: 0,
+}));
+
+const LogoIcon = styled(FolderOpenIcon)({
+  color: '#fff',
+  fontSize: 18,
+});
+
+const NavigationArea = styled(Box)(({ theme }) => ({
+  flex: 1,
+  paddingTop: theme.spacing(1.5),
+  paddingBottom: theme.spacing(1.5),
+  paddingLeft: theme.spacing(1),
+  paddingRight: theme.spacing(1),
+}));
+
+const NavSectionLabel = styled(Typography)(({ theme }) => ({
+  paddingLeft: theme.spacing(1.5),
+  paddingRight: theme.spacing(1.5),
+  marginBottom: theme.spacing(0.5),
+  display: 'block',
+  fontWeight: 600,
+  letterSpacing: '0.05em',
+}));
+
+const NavListItemButton = styled(ListItemButton)(({ theme }) => ({
+  paddingLeft: theme.spacing(1.5),
+  paddingRight: theme.spacing(1.5),
+  paddingTop: theme.spacing(0.875),
+  paddingBottom: theme.spacing(0.875),
+})) as typeof ListItemButton;
+
+const CompactListItemIcon = styled(ListItemIcon)({
+  minWidth: 36,
+});
+
+const SidebarFooter = styled(Box)(({ theme }) => ({
+  paddingLeft: theme.spacing(2),
+  paddingRight: theme.spacing(2),
+  paddingTop: theme.spacing(1.5),
+  paddingBottom: theme.spacing(1.5),
+  borderTop: `1px solid ${theme.palette.divider}`,
+  flexShrink: 0,
+}));
+
+const MainArea = styled(Stack)(({ theme }) => ({
+  marginLeft: SIDEBAR_WIDTH,
+  flex: 1,
+  minHeight: '100vh',
+  backgroundColor: theme.palette.background.default,
+}));
+
+const AppHeader = styled(Box)(({ theme }) => ({
+  height: HEADER_HEIGHT,
+  backgroundColor: theme.palette.background.paper,
+  borderBottom: `1px solid ${theme.palette.divider}`,
+  display: 'flex',
+  alignItems: 'center',
+  paddingLeft: theme.spacing(3),
+  paddingRight: theme.spacing(3),
+  gap: theme.spacing(2),
+  position: 'sticky',
+  top: 0,
+  zIndex: HEADER_Z_INDEX,
+  flexShrink: 0,
+})) as typeof Box;
+
+const FlexSpacer = styled(Box)({
+  flex: 1,
+});
+
+const MainContent = styled(Box)({
+  flex: 1,
+  overflow: 'auto',
+}) as typeof Box;
