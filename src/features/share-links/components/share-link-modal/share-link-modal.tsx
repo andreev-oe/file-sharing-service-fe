@@ -4,6 +4,7 @@ import LinkOffIcon from '@mui/icons-material/LinkOff';
 import {
   Alert,
   Box,
+  CircularProgress,
   DialogActions,
   DialogContent,
   DialogTitle,
@@ -17,24 +18,33 @@ import {
   Typography,
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
+import { AxiosError } from 'axios';
 import { useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { z } from 'zod';
 
+import {
+  getShareLinksControllerFindAllByUserQueryKey,
+  getShareLinksControllerFindByFileQueryKey,
+} from '@/api/generated/endpoints/share-links/share-links';
 import type { ShareLinkDto } from '@/api/generated/types';
 import { Button } from '@/components/ui/button';
 import type { ContextModalProps } from '@/components/ui/modals';
 import { modals } from '@/components/ui/modals/methods';
 import { paths } from '@/config/paths';
+import { queryClient } from '@/lib/react-query';
 import { getApiErrorMessage } from '@/utils/api.utils';
 
 import { useCreateShareLink } from '../../hooks/use-create-share-link';
 import { useDeactivateShareLink } from '../../hooks/use-deactivate-share-link';
+import { useFileShareLink } from '../../hooks/use-file-share-link';
 
 const TTL_1_HOUR = 3600;
 const TTL_24_HOURS = 86400;
 const TTL_7_DAYS = 604800;
 const TTL_NO_LIMIT = 0;
+
+const HTTP_STATUS_NOT_FOUND = 404;
 
 const TTL_OPTIONS = [
   { label: '1 час', value: TTL_1_HOUR },
@@ -83,6 +93,8 @@ const FormStep = ({ fileId, fileName, onCreated }: FormStepProps) => {
         maxDownloads: values.maxDownloads ? Number(values.maxDownloads) : undefined,
       },
     });
+    void queryClient.invalidateQueries({ queryKey: getShareLinksControllerFindAllByUserQueryKey() });
+    void queryClient.invalidateQueries({ queryKey: getShareLinksControllerFindByFileQueryKey(fileId) });
     onCreated(link);
   };
 
@@ -165,6 +177,8 @@ const ResultStep = ({ link, onClose, onDeactivated }: ResultStepProps) => {
       { id: link.token },
       {
         onSuccess: () => {
+          void queryClient.invalidateQueries({ queryKey: getShareLinksControllerFindAllByUserQueryKey() });
+          void queryClient.invalidateQueries({ queryKey: getShareLinksControllerFindByFileQueryKey(link.fileId) });
           onDeactivated();
         },
       },
@@ -173,7 +187,7 @@ const ResultStep = ({ link, onClose, onDeactivated }: ResultStepProps) => {
 
   return (
     <>
-      <DialogTitle>Ссылка создана</DialogTitle>
+      <DialogTitle>Статистика ссылки</DialogTitle>
       <DialogContent>
         <ResultStack gap={2}>
           <LinkUrlBox>
@@ -199,9 +213,21 @@ const ResultStep = ({ link, onClose, onDeactivated }: ResultStepProps) => {
             </DownloadProgressBox>
           )}
 
+          {link.maxDownloads === null && (
+            <Typography variant={'caption'} color={'text.secondary'}>
+              {`Скачиваний: ${link.downloadCount}`}
+            </Typography>
+          )}
+
           {link.expiresAt && (
             <Typography variant={'caption'} color={'text.secondary'}>
               {`Истекает: ${new Date(link.expiresAt).toLocaleString('ru-RU')}`}
+            </Typography>
+          )}
+
+          {!link.expiresAt && (
+            <Typography variant={'caption'} color={'text.secondary'}>
+              Без ограничения по времени
             </Typography>
           )}
         </ResultStack>
@@ -225,12 +251,28 @@ export const ShareLinkModal = ({ id, innerProps }: ContextModalProps<ShareLinkMo
   const { fileId, fileName } = innerProps;
   const [createdLink, setCreatedLink] = useState<ShareLinkDto | null>(null);
 
+  const { data: existingLink, isLoading, error } = useFileShareLink(fileId);
+
   const handleClose = () => {
     modals.closeModal(id);
   };
 
-  if (createdLink) {
-    return <ResultStep link={createdLink} onClose={handleClose} onDeactivated={handleClose} />;
+  if (isLoading) {
+    return (
+      <DialogContent>
+        <LoadingBox>
+          <CircularProgress size={24} />
+        </LoadingBox>
+      </DialogContent>
+    );
+  }
+
+  const activeLink =
+    createdLink ??
+    (error instanceof AxiosError && error.response?.status === HTTP_STATUS_NOT_FOUND ? null : existingLink);
+
+  if (activeLink) {
+    return <ResultStep link={activeLink} onClose={handleClose} onDeactivated={handleClose} />;
   }
 
   return <FormStep fileId={fileId} fileName={fileName} onCreated={setCreatedLink} />;
@@ -264,4 +306,10 @@ const DownloadProgressBox = styled(Box)({
   display: 'flex',
   flexDirection: 'column',
   gap: 4,
+});
+
+const LoadingBox = styled(Box)({
+  display: 'flex',
+  justifyContent: 'center',
+  padding: 24,
 });

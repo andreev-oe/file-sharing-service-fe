@@ -19,6 +19,7 @@ import { styled } from '@mui/material/styles';
 import { useMemo, useState } from 'react';
 
 import type { FileDto } from '@/api/generated/types';
+import { useSharedFileIds } from '@/features/share-links/hooks/use-shared-file-ids';
 import { useUsers } from '@/features/users/hooks/use-users';
 
 import { useFiles } from '../../hooks/use-files';
@@ -44,6 +45,7 @@ export type FileListProps = {
 export const FileList = ({ folderId }: FileListProps) => {
   const { data: files, isLoading } = useFiles(folderId);
   const { data: users } = useUsers();
+  const { data: sharedFileIds } = useSharedFileIds();
   const userNameById = useMemo(() => {
     return Object.fromEntries(users.map((user) => [user.id, user.name]));
   }, [users]);
@@ -163,6 +165,7 @@ export const FileList = ({ folderId }: FileListProps) => {
                   viewMode={'list'}
                   uploaderName={userNameById[file.uploadedById]}
                   isSelected={selectedFile?.id === file.id}
+                  isShared={sharedFileIds.has(file.id)}
                   onSelect={handleFileSelect}
                   onMenuOpen={handleMenuOpen}
                 />
@@ -181,6 +184,7 @@ export const FileList = ({ folderId }: FileListProps) => {
                     viewMode={'grid'}
                     uploaderName={userNameById[file.uploadedById]}
                     isSelected={selectedFile?.id === file.id}
+                    isShared={sharedFileIds.has(file.id)}
                     onSelect={handleFileSelect}
                     onMenuOpen={handleMenuOpen}
                   />

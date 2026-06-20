@@ -4,6 +4,7 @@ import AudioFileIcon from '@mui/icons-material/AudioFile';
 import DescriptionIcon from '@mui/icons-material/Description';
 import ImageIcon from '@mui/icons-material/Image';
 import InsertDriveFileIcon from '@mui/icons-material/InsertDriveFile';
+import LinkIcon from '@mui/icons-material/Link';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
 import TableChartIcon from '@mui/icons-material/TableChart';
@@ -51,11 +52,20 @@ export type FileListItemProps = {
   viewMode: 'list' | 'grid';
   uploaderName?: string;
   isSelected?: boolean;
+  isShared?: boolean;
   onSelect: (file: FileDto) => void;
   onMenuOpen: (event: React.MouseEvent, file: FileDto) => void;
 };
 
-export const FileListItem = ({ file, viewMode, uploaderName, isSelected, onSelect, onMenuOpen }: FileListItemProps) => {
+export const FileListItem = ({
+  file,
+  viewMode,
+  uploaderName,
+  isSelected,
+  isShared,
+  onSelect,
+  onMenuOpen,
+}: FileListItemProps) => {
   const MimeIcon = getMimeIcon(file.mimeType);
 
   const handleClick = () => {
@@ -82,6 +92,13 @@ export const FileListItem = ({ file, viewMode, uploaderName, isSelected, onSelec
         <GridMenuButton size={'small'} onClick={handleMenuClick}>
           <MoreVertIcon fontSize={'small'} />
         </GridMenuButton>
+        {isShared && (
+          <Tooltip title={'Есть активная ссылка'}>
+            <GridShareBadge>
+              <LinkIcon />
+            </GridShareBadge>
+          </Tooltip>
+        )}
       </FileGridCard>
     );
   }
@@ -92,9 +109,16 @@ export const FileListItem = ({ file, viewMode, uploaderName, isSelected, onSelec
         <ListMimeIcon as={MimeIcon} />
       </TableCell>
       <TableCell>
-        <Typography variant={'body2'} noWrap>
-          {file.name}
-        </Typography>
+        <FileNameCell>
+          <Typography variant={'body2'} noWrap>
+            {file.name}
+          </Typography>
+          {isShared && (
+            <Tooltip title={'Есть активная ссылка'}>
+              <ShareIndicatorIcon fontSize={'small'} />
+            </Tooltip>
+          )}
+        </FileNameCell>
       </TableCell>
       <TableCell width={80}>
         <Typography variant={'body2'} color={'text.secondary'} noWrap>
@@ -192,3 +216,30 @@ const GridMenuButton = styled(IconButton)({
   top: 4,
   right: 4,
 });
+
+const GridShareBadge = styled(Box)(({ theme }) => ({
+  position: 'absolute',
+  top: 4,
+  left: 4,
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  color: theme.palette.primary.main,
+  fontSize: 16,
+  '& .MuiSvgIcon-root': {
+    fontSize: 16,
+  },
+}));
+
+const FileNameCell = styled(Box)({
+  display: 'flex',
+  alignItems: 'center',
+  gap: 6,
+  overflow: 'hidden',
+});
+
+const ShareIndicatorIcon = styled(LinkIcon)(({ theme }) => ({
+  flexShrink: 0,
+  fontSize: 16,
+  color: theme.palette.primary.main,
+}));

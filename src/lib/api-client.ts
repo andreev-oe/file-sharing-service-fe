@@ -4,7 +4,7 @@ import { TokensDto } from '@/api/generated/types';
 import { notifications } from '@/components/ui/notifications';
 import { env } from '@/config/env';
 import { getRefreshToken, useAuthStore } from '@/store/auth.store';
-import { getApiErrorMessage } from '@/utils/api.utils';
+import { getApiErrorMessage, isShareLinkNotFoundError } from '@/utils/api.utils';
 
 const REFRESH_URL = '/auth/refresh';
 
@@ -87,7 +87,7 @@ api.interceptors.response.use(
       }
     }
 
-    if (status !== 401) {
+    if (status !== 401 && !isShareLinkNotFoundError(error)) {
       notifications.add({ variant: 'error', message: getApiErrorMessage(error) });
     }
 
