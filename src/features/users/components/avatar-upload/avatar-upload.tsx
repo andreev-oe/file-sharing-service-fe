@@ -16,7 +16,7 @@ export const AvatarUpload = () => {
     if (!file) {
       return;
     }
-    uploadMutation.mutate(file);
+    uploadMutation.mutate({ data: { file } });
     event.target.value = '';
   };
 

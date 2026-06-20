@@ -32,7 +32,7 @@ export const LoginForm = ({ onSuccess }: LoginFormProps) => {
   });
 
   const onSubmit = (data: LoginFormData) => {
-    loginMutation.mutate(data, { onSuccess });
+    loginMutation.mutate({ data }, { onSuccess });
   };
 
   return (

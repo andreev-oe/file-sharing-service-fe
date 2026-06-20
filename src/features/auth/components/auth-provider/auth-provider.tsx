@@ -1,8 +1,9 @@
 import { createContext, ReactNode, useContext, useEffect, useState } from 'react';
 
-import { api } from '@/lib/api-client';
+import { authControllerRefresh } from '@/api/generated/endpoints/auth/auth';
+import { usersControllerGetProfile } from '@/api/generated/endpoints/users/users';
 import { getRefreshToken, useAuthStore } from '@/store/auth.store';
-import { AuthUser, TokenPair } from '@/types/auth';
+import { isAuthUser, isTokenPair } from '@/utils/api.utils';
 
 type AuthContextValue = {
   isLoading: boolean;
@@ -24,14 +25,21 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       return;
     }
 
-    api
-      .post<TokenPair>('/auth/refresh', { refreshToken })
-      .then(({ data }) => {
-        setTokens(data.accessToken, data.refreshToken);
-        return api.get<AuthUser>('/users/me');
+    authControllerRefresh({ refreshToken })
+      .then((refreshResult) => {
+        const tokens: unknown = refreshResult;
+        if (!isTokenPair(tokens)) {
+          throw new Error('Unexpected refresh response');
+        }
+        setTokens(tokens.accessToken, tokens.refreshToken);
+        return usersControllerGetProfile();
       })
-      .then(({ data }) => {
-        setUser(data);
+      .then((profileResult) => {
+        const user: unknown = profileResult;
+        if (!isAuthUser(user)) {
+          throw new Error('Unexpected profile response');
+        }
+        setUser(user);
       })
       .catch(() => {
         clearAuth();

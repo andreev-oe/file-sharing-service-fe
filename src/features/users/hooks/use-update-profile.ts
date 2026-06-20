@@ -1,28 +1,23 @@
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-
-import { api } from '@/lib/api-client';
+import {
+  getUsersControllerGetProfileQueryKey,
+  useUsersControllerUpdateProfile,
+} from '@/api/generated/endpoints/users/users';
+import { queryClient } from '@/lib/react-query';
 import { useAuthStore } from '@/store/auth.store';
-import { AuthUser } from '@/types/auth';
-
-import { PROFILE_QUERY_KEY } from './use-profile';
-
-type UpdateProfileData = {
-  name?: string;
-  bio?: string;
-};
+import { isAuthUser } from '@/utils/api.utils';
 
 export const useUpdateProfile = () => {
   const { setUser } = useAuthStore();
-  const queryClient = useQueryClient();
 
-  return useMutation({
-    mutationFn: async (data: UpdateProfileData) => {
-      const { data: user } = await api.patch<AuthUser>('/users/me', data);
-      return user;
-    },
-    onSuccess: (user) => {
-      setUser(user);
-      queryClient.setQueryData(PROFILE_QUERY_KEY, user);
+  return useUsersControllerUpdateProfile({
+    mutation: {
+      onSuccess: (result) => {
+        const user: unknown = result;
+        if (isAuthUser(user)) {
+          setUser(user);
+        }
+        queryClient.invalidateQueries({ queryKey: getUsersControllerGetProfileQueryKey() });
+      },
     },
   });
 };

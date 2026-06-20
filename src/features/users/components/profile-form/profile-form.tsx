@@ -35,7 +35,7 @@ export const ProfileForm = () => {
 
   const onSubmit = (data: ProfileFormData) => {
     updateMutation.mutate(
-      { name: data.name, bio: data.bio || undefined },
+      { data: { name: data.name, bio: data.bio || undefined } },
       {
         onSuccess: () => {
           notifications.add({ variant: 'success', message: 'Профиль обновлён' });

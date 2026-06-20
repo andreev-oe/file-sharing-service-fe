@@ -1,24 +1,24 @@
-import { useMutation } from '@tanstack/react-query';
-
-import { api } from '@/lib/api-client';
+import { useAuthControllerLogin } from '@/api/generated/endpoints/auth/auth';
+import { usersControllerGetProfile } from '@/api/generated/endpoints/users/users';
 import { useAuthStore } from '@/store/auth.store';
-import { AuthUser, TokenPair } from '@/types/auth';
-
-type LoginData = {
-  email: string;
-  password: string;
-};
+import { isAuthUser, isTokenPair } from '@/utils/api.utils';
 
 export const useLogin = () => {
   const { setTokens, setUser } = useAuthStore();
 
-  return useMutation({
-    mutationFn: async (credentials: LoginData) => {
-      const { data: tokens } = await api.post<TokenPair>('/auth/login', credentials);
-      setTokens(tokens.accessToken, tokens.refreshToken);
-      const { data: user } = await api.get<AuthUser>('/users/me');
-      setUser(user);
-      return user;
+  return useAuthControllerLogin({
+    mutation: {
+      onSuccess: async (data) => {
+        const tokens: unknown = data;
+        if (!isTokenPair(tokens)) {
+          return;
+        }
+        setTokens(tokens.accessToken, tokens.refreshToken);
+        const profileResult: unknown = await usersControllerGetProfile();
+        if (isAuthUser(profileResult)) {
+          setUser(profileResult);
+        }
+      },
     },
   });
 };

@@ -1,25 +1,23 @@
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-
-import { api } from '@/lib/api-client';
+import {
+  getUsersControllerGetProfileQueryKey,
+  useUsersControllerUploadAvatar,
+} from '@/api/generated/endpoints/users/users';
+import { queryClient } from '@/lib/react-query';
 import { useAuthStore } from '@/store/auth.store';
-import { AuthUser } from '@/types/auth';
-
-import { PROFILE_QUERY_KEY } from './use-profile';
+import { isAuthUser } from '@/utils/api.utils';
 
 export const useUploadAvatar = () => {
   const { setUser } = useAuthStore();
-  const queryClient = useQueryClient();
 
-  return useMutation({
-    mutationFn: async (file: File) => {
-      const formData = new FormData();
-      formData.append('file', file);
-      const { data: user } = await api.post<AuthUser>('/users/me/avatar', formData);
-      return user;
-    },
-    onSuccess: (user) => {
-      setUser(user);
-      queryClient.setQueryData(PROFILE_QUERY_KEY, user);
+  return useUsersControllerUploadAvatar({
+    mutation: {
+      onSuccess: (result) => {
+        const user: unknown = result;
+        if (isAuthUser(user)) {
+          setUser(user);
+        }
+        void queryClient.invalidateQueries({ queryKey: getUsersControllerGetProfileQueryKey() });
+      },
     },
   });
 };

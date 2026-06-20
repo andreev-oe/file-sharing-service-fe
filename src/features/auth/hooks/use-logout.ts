@@ -1,22 +1,22 @@
-import { useQueryClient, useMutation } from '@tanstack/react-query';
-
-import { api } from '@/lib/api-client';
+import { useAuthControllerLogout } from '@/api/generated/endpoints/auth/auth';
+import { queryClient } from '@/lib/react-query';
 import { getRefreshToken, useAuthStore } from '@/store/auth.store';
 
 export const useLogout = () => {
   const { clearAuth } = useAuthStore();
-  const queryClient = useQueryClient();
 
-  return useMutation({
-    mutationFn: async () => {
-      const refreshToken = getRefreshToken();
-      if (refreshToken) {
-        await api.post('/auth/logout', { refreshToken }).catch(() => {});
-      }
-    },
-    onSettled: () => {
-      clearAuth();
-      queryClient.clear();
+  const mutation = useAuthControllerLogout({
+    mutation: {
+      onSettled: () => {
+        clearAuth();
+        queryClient.clear();
+      },
     },
   });
+
+  return {
+    ...mutation,
+    mutate: () => mutation.mutate({ data: { refreshToken: getRefreshToken() ?? '' } }),
+    mutateAsync: () => mutation.mutateAsync({ data: { refreshToken: getRefreshToken() ?? '' } }),
+  };
 };

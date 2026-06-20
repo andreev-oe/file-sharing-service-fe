@@ -1,30 +1,27 @@
-import { useMutation } from '@tanstack/react-query';
-
-import { api } from '@/lib/api-client';
+import { authControllerLogin, useAuthControllerRegister } from '@/api/generated/endpoints/auth/auth';
+import { usersControllerGetProfile } from '@/api/generated/endpoints/users/users';
 import { useAuthStore } from '@/store/auth.store';
-import { AuthUser, TokenPair } from '@/types/auth';
-
-type RegisterData = {
-  email: string;
-  name: string;
-  username: string;
-  password: string;
-};
+import { isAuthUser, isTokenPair } from '@/utils/api.utils';
 
 export const useRegister = () => {
   const { setTokens, setUser } = useAuthStore();
 
-  return useMutation({
-    mutationFn: async (data: RegisterData) => {
-      await api.post('/auth/register', data);
-      const { data: tokens } = await api.post<TokenPair>('/auth/login', {
-        email: data.email,
-        password: data.password,
-      });
-      setTokens(tokens.accessToken, tokens.refreshToken);
-      const { data: user } = await api.get<AuthUser>('/users/me');
-      setUser(user);
-      return user;
+  return useAuthControllerRegister({
+    mutation: {
+      onSuccess: async (_, variables) => {
+        const loginResult: unknown = await authControllerLogin({
+          email: variables.data.email,
+          password: variables.data.password,
+        });
+        if (!isTokenPair(loginResult)) {
+          return;
+        }
+        setTokens(loginResult.accessToken, loginResult.refreshToken);
+        const profileResult: unknown = await usersControllerGetProfile();
+        if (isAuthUser(profileResult)) {
+          setUser(profileResult);
+        }
+      },
     },
   });
 };
