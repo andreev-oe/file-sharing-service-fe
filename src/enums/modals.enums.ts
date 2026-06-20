@@ -6,4 +6,7 @@ export enum EContextModal {
   RENAME_FILE = 'renameFile',
   MOVE_FILE = 'moveFile',
   MANAGE_ACCESS = 'manageAccess',
+  CREATE_GROUP = 'createGroup',
+  ADD_MEMBER = 'addMember',
+  TRANSFER_OWNERSHIP = 'transferOwnership',
 }

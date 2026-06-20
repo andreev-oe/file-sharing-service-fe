@@ -2,6 +2,7 @@ import { AxiosError } from 'axios';
 
 import type { AuthUser, TokenPair } from '@/types/auth';
 import type { FolderNode } from '@/types/folders';
+import type { Group, GroupMember } from '@/types/groups';
 export function isTokenPair(value: unknown): value is TokenPair {
   return typeof value === 'object' && value !== null && 'accessToken' in value && 'refreshToken' in value;
 }
@@ -23,6 +24,29 @@ export function isFolderNode(value: unknown): value is FolderNode {
 
 export function isFolderNodeArray(value: unknown): value is FolderNode[] {
   return Array.isArray(value) && value.every(isFolderNode);
+}
+
+function isGroup(value: unknown): value is Group {
+  return typeof value === 'object' && value !== null && 'id' in value && 'name' in value && 'ownerId' in value;
+}
+
+export function isGroupArray(value: unknown): value is Group[] {
+  return Array.isArray(value) && value.every(isGroup);
+}
+
+function isGroupMember(value: unknown): value is GroupMember {
+  return (
+    typeof value === 'object' &&
+    value !== null &&
+    'userId' in value &&
+    'role' in value &&
+    'user' in value &&
+    typeof (value as { user: unknown }).user === 'object'
+  );
+}
+
+export function isGroupMemberArray(value: unknown): value is GroupMember[] {
+  return Array.isArray(value) && value.every(isGroupMember);
 }
 
 export function isDownloadUrlResponse(value: unknown): value is string {

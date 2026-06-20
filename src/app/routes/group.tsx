@@ -1,32 +1,19 @@
-import GroupIcon from '@mui/icons-material/Group';
-import { Box, Stack, Typography } from '@mui/material';
-import { styled } from '@mui/material/styles';
 import { useParams } from 'react-router-dom';
 
 import { Head } from '@/components/seo';
+import { GroupDetailPage } from '@/features/groups/components/group-detail-page';
 
 export const GroupRoute = () => {
   const { groupId } = useParams<{ groupId: string }>();
 
+  if (!groupId) {
+    return null;
+  }
+
   return (
     <>
       <Head title={'Группа'} />
-      <Box p={3}>
-        <Typography variant={'h5'} mb={3}>
-          Группа
-        </Typography>
-        <Stack alignItems={'center'} justifyContent={'center'} py={10} gap={2}>
-          <EmptyStateIcon />
-          <Typography variant={'body2'} color={'text.secondary'}>
-            ID: {groupId}
-          </Typography>
-        </Stack>
-      </Box>
+      <GroupDetailPage groupId={groupId} />
     </>
   );
 };
-
-const EmptyStateIcon = styled(GroupIcon)(({ theme }) => ({
-  fontSize: 72,
-  color: theme.palette.primary.light,
-}));

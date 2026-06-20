@@ -10,8 +10,14 @@ import { MoveFolderModal } from '@/features/folders/components/move-folder-modal
 import type { MoveFolderModalProps } from '@/features/folders/components/move-folder-modal';
 import { RenameFolderModal } from '@/features/folders/components/rename-folder-modal';
 import type { RenameFolderModalProps } from '@/features/folders/components/rename-folder-modal';
-import { PermissionsModal } from '@/features/permissions/components/permissions-modal';
+import { AddMemberModal } from '@/features/groups/components/add-member-modal';
+import type { AddMemberModalProps } from '@/features/groups/components/add-member-modal';
+import { CreateGroupModal } from '@/features/groups/components/create-group-modal';
+import type { CreateGroupModalProps } from '@/features/groups/components/create-group-modal';
+import { TransferOwnershipModal } from '@/features/groups/components/transfer-ownership-modal';
+import type { TransferOwnershipModalProps } from '@/features/groups/components/transfer-ownership-modal';
 import type { PermissionsModalProps } from '@/features/permissions/components/permissions-modal';
+import { PermissionsModal } from '@/features/permissions/components/permissions-modal';
 
 const modals = {
   [EContextModal.EXAMPLE]: (props: ContextModalProps<{ example: string }>) => <div>{props.innerProps.example}</div>,
@@ -21,6 +27,11 @@ const modals = {
   [EContextModal.RENAME_FILE]: (props: ContextModalProps<RenameFileModalProps>) => <RenameFileModal {...props} />,
   [EContextModal.MOVE_FILE]: (props: ContextModalProps<MoveFileModalProps>) => <MoveFileModal {...props} />,
   [EContextModal.MANAGE_ACCESS]: (props: ContextModalProps<PermissionsModalProps>) => <PermissionsModal {...props} />,
+  [EContextModal.CREATE_GROUP]: (props: ContextModalProps<CreateGroupModalProps>) => <CreateGroupModal {...props} />,
+  [EContextModal.ADD_MEMBER]: (props: ContextModalProps<AddMemberModalProps>) => <AddMemberModal {...props} />,
+  [EContextModal.TRANSFER_OWNERSHIP]: (props: ContextModalProps<TransferOwnershipModalProps>) => (
+    <TransferOwnershipModal {...props} />
+  ),
 } as const;
 
 declare module '@/components/ui/modals/types' {
