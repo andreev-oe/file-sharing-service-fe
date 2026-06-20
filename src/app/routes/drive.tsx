@@ -1,30 +1,55 @@
 import FolderOpenIcon from '@mui/icons-material/FolderOpen';
-import { Box, Stack, Typography } from '@mui/material';
+import { Box, CircularProgress, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
+import { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import { Head } from '@/components/seo';
+import { paths } from '@/config/paths';
+import { useFolderTree } from '@/features/folders/hooks/use-folder-tree';
 
 export const DriveRoute = () => {
+  const navigate = useNavigate();
+  const { data: tree, isLoading } = useFolderTree();
+
+  useEffect(() => {
+    if (!isLoading && tree.length > 0) {
+      navigate(paths.folder.getHref(tree[0].id), { replace: true });
+    }
+  }, [isLoading, tree, navigate]);
+
+  if (isLoading) {
+    return (
+      <CenteredBox>
+        <CircularProgress />
+      </CenteredBox>
+    );
+  }
+
   return (
     <>
       <Head title={'Мой диск'} />
-      <Box p={3}>
-        <Typography variant={'h5'} mb={3}>
-          Мой диск
+      <CenteredBox>
+        <EmptyStateIcon />
+        <Typography variant={'h6'} color={'text.secondary'} fontWeight={400}>
+          Нет папок
         </Typography>
-        <Stack alignItems={'center'} justifyContent={'center'} py={10} gap={2}>
-          <EmptyStateIcon />
-          <Typography variant={'h6'} color={'text.secondary'} fontWeight={400}>
-            Здесь будут ваши файлы и папки
-          </Typography>
-          <Typography variant={'body2'} color={'text.secondary'}>
-            Загрузите первый файл или создайте папку
-          </Typography>
-        </Stack>
-      </Box>
+        <Typography variant={'body2'} color={'text.secondary'}>
+          Создайте первую папку в боковой панели
+        </Typography>
+      </CenteredBox>
     </>
   );
 };
+
+const CenteredBox = styled(Box)({
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'center',
+  justifyContent: 'center',
+  height: '100%',
+  gap: 16,
+});
 
 const EmptyStateIcon = styled(FolderOpenIcon)(({ theme }) => ({
   fontSize: 72,

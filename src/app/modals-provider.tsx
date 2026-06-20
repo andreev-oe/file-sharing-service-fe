@@ -1,5 +1,9 @@
 import { ContextModalProps, ModalsManager } from '@/components/ui/modals';
 import { EContextModal } from '@/enums/modals.enums';
+import { MoveFileModal } from '@/features/files/components/move-file-modal';
+import type { MoveFileModalProps } from '@/features/files/components/move-file-modal';
+import { RenameFileModal } from '@/features/files/components/rename-file-modal';
+import type { RenameFileModalProps } from '@/features/files/components/rename-file-modal';
 import { CreateFolderModal } from '@/features/folders/components/create-folder-modal';
 import type { CreateFolderModalProps } from '@/features/folders/components/create-folder-modal';
 import { MoveFolderModal } from '@/features/folders/components/move-folder-modal';
@@ -12,6 +16,8 @@ const modals = {
   [EContextModal.CREATE_FOLDER]: (props: ContextModalProps<CreateFolderModalProps>) => <CreateFolderModal {...props} />,
   [EContextModal.RENAME_FOLDER]: (props: ContextModalProps<RenameFolderModalProps>) => <RenameFolderModal {...props} />,
   [EContextModal.MOVE_FOLDER]: (props: ContextModalProps<MoveFolderModalProps>) => <MoveFolderModal {...props} />,
+  [EContextModal.RENAME_FILE]: (props: ContextModalProps<RenameFileModalProps>) => <RenameFileModal {...props} />,
+  [EContextModal.MOVE_FILE]: (props: ContextModalProps<MoveFileModalProps>) => <MoveFileModal {...props} />,
 } as const;
 
 declare module '@/components/ui/modals/types' {

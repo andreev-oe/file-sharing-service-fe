@@ -1,6 +1,7 @@
 import { AxiosError } from 'axios';
 
 import type { AuthUser, TokenPair } from '@/types/auth';
+import type { FileRecord, FileVersion } from '@/types/files';
 import type { FolderNode } from '@/types/folders';
 
 export function isTokenPair(value: unknown): value is TokenPair {
@@ -24,6 +25,39 @@ export function isFolderNode(value: unknown): value is FolderNode {
 
 export function isFolderNodeArray(value: unknown): value is FolderNode[] {
   return Array.isArray(value) && value.every(isFolderNode);
+}
+
+export function isFileRecord(value: unknown): value is FileRecord {
+  return (
+    typeof value === 'object' &&
+    value !== null &&
+    'id' in value &&
+    'name' in value &&
+    'mimeType' in value &&
+    'size' in value
+  );
+}
+
+export function isFileRecordArray(value: unknown): value is FileRecord[] {
+  return Array.isArray(value) && value.every(isFileRecord);
+}
+
+export function isFileVersion(value: unknown): value is FileVersion {
+  return typeof value === 'object' && value !== null && 'version' in value && 'size' in value && 'uploadedAt' in value;
+}
+
+export function isFileVersionArray(value: unknown): value is FileVersion[] {
+  return Array.isArray(value) && value.every(isFileVersion);
+}
+
+export function isDownloadUrlResponse(value: unknown): value is string {
+  return typeof value === 'string';
+}
+
+export function hasUrlField(value: unknown): value is { url: string } {
+  return (
+    typeof value === 'object' && value !== null && 'url' in value && typeof (value as { url: unknown }).url === 'string'
+  );
 }
 
 export const getApiErrorMessage = (error: unknown, fallback = 'Что-то пошло не так'): string => {

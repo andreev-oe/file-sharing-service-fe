@@ -3,8 +3,10 @@ import { Box, CircularProgress, Divider, IconButton, Menu, MenuItem, Tooltip, Ty
 import { styled } from '@mui/material/styles';
 import { SimpleTreeView } from '@mui/x-tree-view/SimpleTreeView';
 import { useState } from 'react';
+import { useMatch } from 'react-router-dom';
 
 import { modals } from '@/components/ui/modals/methods';
+import { paths } from '@/config/paths';
 import { EContextModal } from '@/enums/modals.enums';
 import type { FolderNode } from '@/types/folders';
 
@@ -20,10 +22,25 @@ type ContextMenuState = {
   node: FolderNode;
 };
 
+const findAncestorIds = (nodes: FolderNode[], targetId: string, path: string[] = []): string[] => {
+  for (const node of nodes) {
+    if (node.id === targetId) {
+      return path;
+    }
+    const result = findAncestorIds(node.children, targetId, [...path, node.id]);
+    if (result.length > 0) {
+      return result;
+    }
+  }
+  return [];
+};
+
 export const FolderTree = () => {
   const { data: tree, isLoading } = useFolderTree();
   const { mutate: deleteFolder } = useDeleteFolder();
   const [contextMenu, setContextMenu] = useState<ContextMenuState | null>(null);
+  const folderMatch = useMatch(paths.folder.path);
+  const activeFolderId = folderMatch?.params?.folderId ?? null;
 
   const handleContextMenu = (event: React.MouseEvent, node: FolderNode) => {
     setContextMenu({ mouseX: event.clientX, mouseY: event.clientY, node });
@@ -116,7 +133,10 @@ export const FolderTree = () => {
       )}
 
       {!isLoading && tree.length > 0 && (
-        <SimpleTreeView>
+        <SimpleTreeView
+          selectedItems={activeFolderId}
+          defaultExpandedItems={activeFolderId ? findAncestorIds(tree, activeFolderId) : []}
+        >
           {tree.map((node) => (
             <FolderTreeNode key={node.id} node={node} onContextMenu={handleContextMenu} />
           ))}
