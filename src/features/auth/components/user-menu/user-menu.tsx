@@ -33,12 +33,12 @@ export const UserMenu = () => {
 
   return (
     <>
-      <UserMenuTrigger direction="row" alignItems="center" gap={1} onClick={handleClick}>
+      <UserMenuTrigger direction={'row'} alignItems={'center'} gap={1} onClick={handleClick}>
         <MenuAvatar src={user?.avatarUrl ?? undefined}>{user?.name?.[0]?.toUpperCase()}</MenuAvatar>
-        <ResponsiveUserName variant="body2" fontWeight={500} color="text.primary">
+        <ResponsiveUserName variant={'body2'} fontWeight={500} color={'text.primary'}>
           {user?.name ?? 'Пользователь'}
         </ResponsiveUserName>
-        {open ? <ArrowDropUpIcon fontSize="small" /> : <ArrowDropDownIcon fontSize="small" />}
+        {open ? <ArrowDropUpIcon fontSize={'small'} /> : <ArrowDropDownIcon fontSize={'small'} />}
       </UserMenuTrigger>
 
       <StyledUserMenu
@@ -50,10 +50,10 @@ export const UserMenu = () => {
       >
         {user && (
           <UserMenuHeader>
-            <Typography variant="body2" fontWeight={600} noWrap>
+            <Typography variant={'body2'} fontWeight={600} noWrap>
               {user.name}
             </Typography>
-            <Typography variant="caption" color="text.secondary" noWrap>
+            <Typography variant={'caption'} color={'text.secondary'} noWrap>
               {user.email}
             </Typography>
           </UserMenuHeader>
@@ -61,14 +61,14 @@ export const UserMenu = () => {
         {user && <Divider />}
         <MenuItem component={Link} to={paths.profile.getHref()} onClick={handleClose}>
           <ListItemIcon>
-            <PersonIcon fontSize="small" />
+            <PersonIcon fontSize={'small'} />
           </ListItemIcon>
           Профиль
         </MenuItem>
         <Divider />
         <DangerMenuItem onClick={handleSignOut}>
           <ListItemIcon>
-            <Logout fontSize="small" />
+            <Logout fontSize={'small'} />
           </ListItemIcon>
           Выйти
         </DangerMenuItem>

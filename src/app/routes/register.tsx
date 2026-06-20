@@ -18,15 +18,15 @@ export const RegisterRoute = () => {
 
   return (
     <>
-      <Head title="Регистрация" />
+      <Head title={'Регистрация'} />
       <AuthPageRoot>
-        <Stack alignItems="center" gap={3} width="100%" maxWidth={420}>
-          <Stack alignItems="center" gap={1.5}>
+        <Stack alignItems={'center'} gap={3} width={'100%'} maxWidth={420}>
+          <Stack alignItems={'center'} gap={1.5}>
             <BrandIconBox>
               <BrandIcon />
             </BrandIconBox>
-            <Typography variant="h5">FileShare Pro</Typography>
-            <Typography color="text.secondary" variant="body2">
+            <Typography variant={'h5'}>FileShare Pro</Typography>
+            <Typography color={'text.secondary'} variant={'body2'}>
               Создайте аккаунт
             </Typography>
           </Stack>
@@ -37,14 +37,14 @@ export const RegisterRoute = () => {
             </PaddedCardContent>
           </FullWidthCard>
 
-          <Stack direction="row" alignItems="center" gap={1}>
+          <Stack direction={'row'} alignItems={'center'} gap={1}>
             <FlexDivider />
-            <Typography variant="body2" color="text.secondary">
+            <Typography variant={'body2'} color={'text.secondary'}>
               Уже есть аккаунт?
             </Typography>
             <FlexDivider />
           </Stack>
-          <Typography variant="body2">
+          <Typography variant={'body2'}>
             <AuthLink href={paths.login.getHref()}>Войти</AuthLink>
           </Typography>
         </Stack>

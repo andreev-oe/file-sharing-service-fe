@@ -43,17 +43,17 @@ export const RegisterForm = ({ onSuccess }: RegisterFormProps) => {
   };
 
   return (
-    <Stack component="form" gap={2.5} onSubmit={handleSubmit(onSubmit)}>
+    <Stack component={'form'} gap={2.5} onSubmit={handleSubmit(onSubmit)}>
       <Controller
-        name="name"
+        name={'name'}
         control={control}
         render={({ field, fieldState }) => (
           <TextField
             {...field}
-            label="Имя"
+            label={'Имя'}
             fullWidth
-            size="medium"
-            autoComplete="name"
+            size={'medium'}
+            autoComplete={'name'}
             autoFocus
             error={!!fieldState.error}
             helperText={fieldState.error?.message}
@@ -62,35 +62,35 @@ export const RegisterForm = ({ onSuccess }: RegisterFormProps) => {
       />
 
       <Controller
-        name="username"
+        name={'username'}
         control={control}
         render={({ field, fieldState }) => (
           <TextField
             {...field}
-            label="Имя пользователя"
+            label={'Имя пользователя'}
             fullWidth
-            size="medium"
-            autoComplete="username"
+            size={'medium'}
+            autoComplete={'username'}
             error={!!fieldState.error}
             helperText={fieldState.error?.message ?? 'Только латиница, цифры и _ (3–32 символа)'}
             InputProps={{
-              startAdornment: <InputAdornment position="start">@</InputAdornment>,
+              startAdornment: <InputAdornment position={'start'}>@</InputAdornment>,
             }}
           />
         )}
       />
 
       <Controller
-        name="email"
+        name={'email'}
         control={control}
         render={({ field, fieldState }) => (
           <TextField
             {...field}
-            label="Email"
-            type="email"
+            label={'Email'}
+            type={'email'}
             fullWidth
-            size="medium"
-            autoComplete="email"
+            size={'medium'}
+            autoComplete={'email'}
             error={!!fieldState.error}
             helperText={fieldState.error?.message}
           />
@@ -98,23 +98,28 @@ export const RegisterForm = ({ onSuccess }: RegisterFormProps) => {
       />
 
       <Controller
-        name="password"
+        name={'password'}
         control={control}
         render={({ field, fieldState }) => (
           <TextField
             {...field}
-            label="Пароль"
+            label={'Пароль'}
             type={showPassword ? 'text' : 'password'}
             fullWidth
-            size="medium"
-            autoComplete="new-password"
+            size={'medium'}
+            autoComplete={'new-password'}
             error={!!fieldState.error}
             helperText={fieldState.error?.message ?? 'Минимум 8 символов'}
             InputProps={{
               endAdornment: (
-                <InputAdornment position="end">
-                  <IconButton onClick={() => setShowPassword((prev) => !prev)} edge="end" size="small" tabIndex={-1}>
-                    {showPassword ? <VisibilityOffIcon fontSize="small" /> : <VisibilityIcon fontSize="small" />}
+                <InputAdornment position={'end'}>
+                  <IconButton
+                    onClick={() => setShowPassword((prev) => !prev)}
+                    edge={'end'}
+                    size={'small'}
+                    tabIndex={-1}
+                  >
+                    {showPassword ? <VisibilityOffIcon fontSize={'small'} /> : <VisibilityIcon fontSize={'small'} />}
                   </IconButton>
                 </InputAdornment>
               ),
@@ -124,10 +129,12 @@ export const RegisterForm = ({ onSuccess }: RegisterFormProps) => {
       />
 
       {registerMutation.error && (
-        <RoundedAlert severity="error">{getApiErrorMessage(registerMutation.error, 'Ошибка регистрации')}</RoundedAlert>
+        <RoundedAlert severity={'error'}>
+          {getApiErrorMessage(registerMutation.error, 'Ошибка регистрации')}
+        </RoundedAlert>
       )}
 
-      <Button type="submit" variant="contained" fullWidth size="large" loading={registerMutation.isPending}>
+      <Button type={'submit'} variant={'contained'} fullWidth size={'large'} loading={registerMutation.isPending}>
         Создать аккаунт
       </Button>
     </Stack>

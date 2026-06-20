@@ -7,14 +7,14 @@ import { Head } from '@/components/seo';
 export const GroupsRoute = () => {
   return (
     <>
-      <Head title="Группы" />
+      <Head title={'Группы'} />
       <Box p={3}>
-        <Typography variant="h5" mb={3}>
+        <Typography variant={'h5'} mb={3}>
           Группы
         </Typography>
-        <Stack alignItems="center" justifyContent="center" py={10} gap={2}>
+        <Stack alignItems={'center'} justifyContent={'center'} py={10} gap={2}>
           <EmptyStateIcon />
-          <Typography variant="h6" color="text.secondary" fontWeight={400}>
+          <Typography variant={'h6'} color={'text.secondary'} fontWeight={400}>
             Управление группами пользователей
           </Typography>
         </Stack>

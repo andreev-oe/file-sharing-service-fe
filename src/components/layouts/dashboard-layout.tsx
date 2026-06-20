@@ -21,9 +21,9 @@ type NavItem = {
 };
 
 const NAV_ITEMS: NavItem[] = [
-  { icon: <FolderOpenIcon fontSize="small" />, label: 'Мой диск', to: paths.drive.getHref() },
-  { icon: <GroupIcon fontSize="small" />, label: 'Группы', to: paths.groups.getHref() },
-  { icon: <AssessmentIcon fontSize="small" />, label: 'Отчёты', to: paths.reports.getHref() },
+  { icon: <FolderOpenIcon fontSize={'small'} />, label: 'Мой диск', to: paths.drive.getHref() },
+  { icon: <GroupIcon fontSize={'small'} />, label: 'Группы', to: paths.groups.getHref() },
+  { icon: <AssessmentIcon fontSize={'small'} />, label: 'Отчёты', to: paths.reports.getHref() },
 ];
 
 const SidebarNavItem = ({ icon, label, to }: NavItem) => {
@@ -40,24 +40,24 @@ const SidebarNavItem = ({ icon, label, to }: NavItem) => {
 
 export const DashboardLayout = ({ children }: PropsWithChildren) => {
   return (
-    <RootLayout direction="row">
-      <Sidebar component="nav">
-        <SidebarBrandRow direction="row" alignItems="center" gap={1.5}>
+    <RootLayout direction={'row'}>
+      <Sidebar component={'nav'}>
+        <SidebarBrandRow direction={'row'} alignItems={'center'} gap={1.5}>
           <LogoIconBox>
             <LogoIcon />
           </LogoIconBox>
           <Box>
-            <Typography variant="subtitle1" fontWeight={700} lineHeight={1.2}>
+            <Typography variant={'subtitle1'} fontWeight={700} lineHeight={1.2}>
               FileShare
             </Typography>
-            <Typography variant="caption" color="text.secondary" lineHeight={1}>
+            <Typography variant={'caption'} color={'text.secondary'} lineHeight={1}>
               Pro
             </Typography>
           </Box>
         </SidebarBrandRow>
 
         <NavigationArea>
-          <NavSectionLabel variant="caption" color="text.secondary">
+          <NavSectionLabel variant={'caption'} color={'text.secondary'}>
             НАВИГАЦИЯ
           </NavSectionLabel>
           <List disablePadding>
@@ -68,19 +68,19 @@ export const DashboardLayout = ({ children }: PropsWithChildren) => {
         </NavigationArea>
 
         <SidebarFooter>
-          <Typography variant="caption" color="text.secondary">
+          <Typography variant={'caption'} color={'text.secondary'}>
             © 2025 FileShare Pro
           </Typography>
         </SidebarFooter>
       </Sidebar>
 
       <MainArea>
-        <AppHeader component="header">
+        <AppHeader component={'header'}>
           <FlexSpacer />
           <UserMenu />
         </AppHeader>
 
-        <MainContent component="main">{children}</MainContent>
+        <MainContent component={'main'}>{children}</MainContent>
       </MainArea>
     </RootLayout>
   );

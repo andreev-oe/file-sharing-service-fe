@@ -46,18 +46,18 @@ export const ProfileForm = () => {
   };
 
   return (
-    <Stack gap={2.5} component="form" onSubmit={handleSubmit(onSubmit)}>
-      <Typography variant="subtitle1">Редактирование профиля</Typography>
+    <Stack gap={2.5} component={'form'} onSubmit={handleSubmit(onSubmit)}>
+      <Typography variant={'subtitle1'}>Редактирование профиля</Typography>
 
       <Controller
-        name="name"
+        name={'name'}
         control={control}
         render={({ field, fieldState }) => (
           <TextField
             {...field}
-            label="Имя"
+            label={'Имя'}
             fullWidth
-            size="medium"
+            size={'medium'}
             error={!!fieldState.error}
             helperText={fieldState.error?.message}
           />
@@ -65,14 +65,14 @@ export const ProfileForm = () => {
       />
 
       <Controller
-        name="bio"
+        name={'bio'}
         control={control}
         render={({ field, fieldState }) => (
           <TextField
             {...field}
-            label="О себе"
+            label={'О себе'}
             fullWidth
-            size="medium"
+            size={'medium'}
             multiline
             rows={3}
             error={!!fieldState.error}
@@ -81,10 +81,12 @@ export const ProfileForm = () => {
         )}
       />
 
-      {updateMutation.error && <RoundedAlert severity="error">{getApiErrorMessage(updateMutation.error)}</RoundedAlert>}
+      {updateMutation.error && (
+        <RoundedAlert severity={'error'}>{getApiErrorMessage(updateMutation.error)}</RoundedAlert>
+      )}
 
-      <Stack direction="row" justifyContent="flex-end">
-        <Button type="submit" variant="contained" loading={updateMutation.isPending}>
+      <Stack direction={'row'} justifyContent={'flex-end'}>
+        <Button type={'submit'} variant={'contained'} loading={updateMutation.isPending}>
           Сохранить
         </Button>
       </Stack>

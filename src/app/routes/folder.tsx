@@ -10,14 +10,14 @@ export const FolderRoute = () => {
 
   return (
     <>
-      <Head title="Папка" />
+      <Head title={'Папка'} />
       <Box p={3}>
-        <Typography variant="h5" mb={3}>
+        <Typography variant={'h5'} mb={3}>
           Папка
         </Typography>
-        <Stack alignItems="center" justifyContent="center" py={10} gap={2}>
+        <Stack alignItems={'center'} justifyContent={'center'} py={10} gap={2}>
           <EmptyStateIcon />
-          <Typography variant="body2" color="text.secondary">
+          <Typography variant={'body2'} color={'text.secondary'}>
             ID: {folderId}
           </Typography>
         </Stack>

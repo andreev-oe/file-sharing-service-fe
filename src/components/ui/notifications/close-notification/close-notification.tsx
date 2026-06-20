@@ -14,8 +14,8 @@ export const CloseNotification = forwardRef<HTMLButtonElement, IconButtonProps &
     };
 
     return (
-      <IconButton size="small" aria-label="close" color="inherit" ref={ref} onClick={handleClick} {...props}>
-        <Close fontSize="small" />
+      <IconButton size={'small'} aria-label={'close'} color={'inherit'} ref={ref} onClick={handleClick} {...props}>
+        <Close fontSize={'small'} />
       </IconButton>
     );
   },

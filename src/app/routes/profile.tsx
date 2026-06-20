@@ -13,9 +13,9 @@ export const ProfileRoute = () => {
 
   return (
     <>
-      <Head title="Профиль" />
-      <Box p={3} maxWidth={720} mx="auto">
-        <Typography variant="h5" mb={3}>
+      <Head title={'Профиль'} />
+      <Box p={3} maxWidth={720} mx={'auto'}>
+        <Typography variant={'h5'} mb={3}>
           Профиль
         </Typography>
 
@@ -26,21 +26,21 @@ export const ProfileRoute = () => {
                 <AvatarUpload />
 
                 <Stack gap={1} flex={1}>
-                  <Stack direction="row" alignItems="center" gap={1} flexWrap="wrap">
-                    <Typography variant="h6">{user?.name}</Typography>
-                    {user?.role === 'admin' && <AdminChip label="Admin" size="small" color="primary" />}
+                  <Stack direction={'row'} alignItems={'center'} gap={1} flexWrap={'wrap'}>
+                    <Typography variant={'h6'}>{user?.name}</Typography>
+                    {user?.role === 'admin' && <AdminChip label={'Admin'} size={'small'} color={'primary'} />}
                   </Stack>
 
-                  <Stack direction="row" alignItems="center" gap={0.75}>
+                  <Stack direction={'row'} alignItems={'center'} gap={0.75}>
                     <MetaPersonIcon />
-                    <Typography variant="body2" color="text.secondary">
+                    <Typography variant={'body2'} color={'text.secondary'}>
                       @{user?.username}
                     </Typography>
                   </Stack>
 
-                  <Stack direction="row" alignItems="center" gap={0.75}>
+                  <Stack direction={'row'} alignItems={'center'} gap={0.75}>
                     <MetaEmailIcon />
-                    <Typography variant="body2" color="text.secondary">
+                    <Typography variant={'body2'} color={'text.secondary'}>
                       {user?.email}
                     </Typography>
                   </Stack>
@@ -48,7 +48,7 @@ export const ProfileRoute = () => {
                   {user?.bio && (
                     <>
                       <BioSectionDivider />
-                      <BioText variant="body2" color="text.secondary">
+                      <BioText variant={'body2'} color={'text.secondary'}>
                         {user.bio}
                       </BioText>
                     </>

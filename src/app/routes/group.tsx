@@ -10,14 +10,14 @@ export const GroupRoute = () => {
 
   return (
     <>
-      <Head title="Группа" />
+      <Head title={'Группа'} />
       <Box p={3}>
-        <Typography variant="h5" mb={3}>
+        <Typography variant={'h5'} mb={3}>
           Группа
         </Typography>
-        <Stack alignItems="center" justifyContent="center" py={10} gap={2}>
+        <Stack alignItems={'center'} justifyContent={'center'} py={10} gap={2}>
           <EmptyStateIcon />
-          <Typography variant="body2" color="text.secondary">
+          <Typography variant={'body2'} color={'text.secondary'}>
             ID: {groupId}
           </Typography>
         </Stack>

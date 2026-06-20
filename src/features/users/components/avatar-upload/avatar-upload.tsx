@@ -37,14 +37,20 @@ export const AvatarUpload = () => {
 
   return (
     <>
-      <input ref={fileInputRef} type="file" accept="image/*" onChange={handleFileChange} style={{ display: 'none' }} />
+      <input
+        ref={fileInputRef}
+        type={'file'}
+        accept={'image/*'}
+        onChange={handleFileChange}
+        style={{ display: 'none' }}
+      />
       <Badge
-        overlap="circular"
+        overlap={'circular'}
         anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
         badgeContent={
-          <Tooltip title="Изменить фото">
+          <Tooltip title={'Изменить фото'}>
             <EditAvatarButton
-              size="small"
+              size={'small'}
               onClick={() => fileInputRef.current?.click()}
               disabled={uploadMutation.isPending}
             >

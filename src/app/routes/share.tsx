@@ -10,13 +10,13 @@ export const ShareRoute = () => {
 
   return (
     <>
-      <Head title="Публичная ссылка" />
+      <Head title={'Публичная ссылка'} />
       <SharePageRoot>
-        <Stack alignItems="center" gap={2}>
+        <Stack alignItems={'center'} gap={2}>
           <ShareLinkIcon />
-          <Typography variant="h6">Загрузка файла...</Typography>
+          <Typography variant={'h6'}>Загрузка файла...</Typography>
           <CircularProgress size={24} />
-          <Typography variant="caption" color="text.secondary">
+          <Typography variant={'caption'} color={'text.secondary'}>
             Токен: {token}
           </Typography>
         </Stack>
