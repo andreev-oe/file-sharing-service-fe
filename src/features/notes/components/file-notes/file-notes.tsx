@@ -86,99 +86,101 @@ export const FileNotes = ({ fileId }: FileNotesProps) => {
         </Typography>
       </NotesSectionHeader>
 
-      {isLoading && (
-        <Stack alignItems={'center'} py={2}>
-          <CircularProgress size={20} />
-        </Stack>
-      )}
+      <NotesScrollArea>
+        {isLoading && (
+          <Stack alignItems={'center'} py={2}>
+            <CircularProgress size={20} />
+          </Stack>
+        )}
 
-      {!isLoading && isError && (
-        <Typography variant={'caption'} color={'error'} pb={1}>
-          Не удалось загрузить заметки
-        </Typography>
-      )}
+        {!isLoading && isError && (
+          <Typography variant={'caption'} color={'error'} pb={1}>
+            Не удалось загрузить заметки
+          </Typography>
+        )}
 
-      {!isLoading && !isError && notes.length === 0 && (
-        <Typography variant={'caption'} color={'text.disabled'} pb={1}>
-          Нет заметок
-        </Typography>
-      )}
+        {!isLoading && !isError && notes.length === 0 && (
+          <Typography variant={'caption'} color={'text.disabled'} pb={1}>
+            Нет заметок
+          </Typography>
+        )}
 
-      {!isLoading &&
-        !isError &&
-        notes.map((note) => (
-          <NoteItem key={note.id}>
-            {editingId === note.id ? (
-              <Stack gap={0.5}>
-                <TextField
-                  multiline
-                  minRows={2}
-                  maxRows={6}
-                  size={'small'}
-                  value={editingContent}
-                  onChange={(event) => {
-                    setEditingContent(event.target.value);
-                  }}
-                  onKeyDown={(event) => {
-                    if (event.key === 'Escape') {
-                      handleEditCancel();
-                    }
-                  }}
-                  autoFocus
-                  fullWidth
-                />
-                <Stack direction={'row'} gap={0.5} justifyContent={'flex-end'}>
-                  <Button size={'small'} variant={'text'} onClick={handleEditCancel}>
-                    Отмена
-                  </Button>
-                  <Button
+        {!isLoading &&
+          !isError &&
+          notes.map((note) => (
+            <NoteItem key={note.id}>
+              {editingId === note.id ? (
+                <Stack gap={0.5}>
+                  <TextField
+                    multiline
+                    minRows={2}
+                    maxRows={6}
                     size={'small'}
-                    variant={'contained'}
-                    startIcon={<SaveIcon fontSize={'small'} />}
-                    loading={isUpdating}
-                    onClick={handleEditSave}
-                  >
-                    Сохранить
-                  </Button>
+                    value={editingContent}
+                    onChange={(event) => {
+                      setEditingContent(event.target.value);
+                    }}
+                    onKeyDown={(event) => {
+                      if (event.key === 'Escape') {
+                        handleEditCancel();
+                      }
+                    }}
+                    autoFocus
+                    fullWidth
+                  />
+                  <Stack direction={'row'} gap={0.5} justifyContent={'flex-end'}>
+                    <Button size={'small'} variant={'text'} onClick={handleEditCancel}>
+                      Отмена
+                    </Button>
+                    <Button
+                      size={'small'}
+                      variant={'contained'}
+                      startIcon={<SaveIcon fontSize={'small'} />}
+                      loading={isUpdating}
+                      onClick={handleEditSave}
+                    >
+                      Сохранить
+                    </Button>
+                  </Stack>
                 </Stack>
-              </Stack>
-            ) : (
-              <Stack direction={'row'} alignItems={'flex-start'} gap={0.5}>
-                <NoteContent>
-                  <Typography variant={'body2'} sx={{ whiteSpace: 'pre-wrap', wordBreak: 'break-word' }}>
-                    {note.content}
-                  </Typography>
-                  <Typography variant={'caption'} color={'text.disabled'}>
-                    {formatDate(new Date(note.updatedAt).getTime())}
-                  </Typography>
-                </NoteContent>
-                <NoteActions>
-                  <Tooltip title={'Редактировать'}>
-                    <IconButton
-                      size={'small'}
-                      onClick={() => {
-                        handleEditStart(note);
-                      }}
-                    >
-                      <EditIcon sx={{ fontSize: 14 }} />
-                    </IconButton>
-                  </Tooltip>
-                  <Tooltip title={'Удалить'}>
-                    <IconButton
-                      size={'small'}
-                      color={'error'}
-                      onClick={() => {
-                        handleDelete(note.id);
-                      }}
-                    >
-                      <DeleteIcon sx={{ fontSize: 14 }} />
-                    </IconButton>
-                  </Tooltip>
-                </NoteActions>
-              </Stack>
-            )}
-          </NoteItem>
-        ))}
+              ) : (
+                <Stack direction={'row'} alignItems={'flex-start'} gap={0.5}>
+                  <NoteContent>
+                    <Typography variant={'body2'} sx={{ whiteSpace: 'pre-wrap', wordBreak: 'break-word' }}>
+                      {note.content}
+                    </Typography>
+                    <Typography variant={'caption'} color={'text.disabled'}>
+                      {formatDate(new Date(note.updatedAt).getTime())}
+                    </Typography>
+                  </NoteContent>
+                  <NoteActions>
+                    <Tooltip title={'Редактировать'}>
+                      <IconButton
+                        size={'small'}
+                        onClick={() => {
+                          handleEditStart(note);
+                        }}
+                      >
+                        <EditIcon sx={{ fontSize: 14 }} />
+                      </IconButton>
+                    </Tooltip>
+                    <Tooltip title={'Удалить'}>
+                      <IconButton
+                        size={'small'}
+                        color={'error'}
+                        onClick={() => {
+                          handleDelete(note.id);
+                        }}
+                      >
+                        <DeleteIcon sx={{ fontSize: 14 }} />
+                      </IconButton>
+                    </Tooltip>
+                  </NoteActions>
+                </Stack>
+              )}
+            </NoteItem>
+          ))}
+      </NotesScrollArea>
 
       <Divider />
 
@@ -216,22 +218,34 @@ export const FileNotes = ({ fileId }: FileNotesProps) => {
 };
 
 const NotesRoot = styled(Box)(({ theme }) => ({
+  flex: 1,
+  minHeight: 0,
   display: 'flex',
   flexDirection: 'column',
-  gap: theme.spacing(0.5),
-  width: '100%',
+  paddingTop: theme.spacing(1),
 }));
 
 const NotesSectionHeader = styled(Stack)(({ theme }) => ({
   flexDirection: 'row',
   alignItems: 'center',
   gap: theme.spacing(0.75),
-  paddingTop: theme.spacing(0.5),
+  flexShrink: 0,
+  paddingBottom: theme.spacing(0.5),
 }));
+
+const NotesScrollArea = styled(Box)({
+  flex: 1,
+  minHeight: 0,
+  overflowY: 'auto',
+  display: 'flex',
+  flexDirection: 'column',
+});
 
 const NoteItem = styled(Box)(({ theme }) => ({
   padding: theme.spacing(0.75, 0),
-  borderBottom: `1px solid ${theme.palette.divider}`,
+  '&:not(:last-child)': {
+    borderBottom: `1px solid ${theme.palette.divider}`,
+  },
 }));
 
 const NoteContent = styled(Box)({
@@ -251,5 +265,6 @@ const AddNoteForm = styled(Box)(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
   gap: theme.spacing(0.75),
-  paddingTop: theme.spacing(0.5),
+  paddingTop: theme.spacing(0.75),
+  flexShrink: 0,
 }));

@@ -208,7 +208,8 @@ export const FileList = ({ folderId }: FileListProps) => {
 
 const FileListRoot = styled(Box)({
   display: 'flex',
-  height: '100%',
+  flex: 1,
+  minHeight: 0,
   overflow: 'hidden',
 });
 

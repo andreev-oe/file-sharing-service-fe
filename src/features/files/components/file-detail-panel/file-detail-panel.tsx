@@ -36,7 +36,7 @@ export const FileDetailPanel = ({ file, onClose }: FileDetailPanelProps) => {
 
       <Divider />
 
-      <PanelContent>
+      <PanelStaticContent>
         <PanelIconWrapper>
           <LargeFileIcon />
         </PanelIconWrapper>
@@ -87,11 +87,13 @@ export const FileDetailPanel = ({ file, onClose }: FileDetailPanelProps) => {
             Скачать
           </Button>
         </Stack>
+      </PanelStaticContent>
 
-        <Divider sx={{ width: '100%' }} />
+      <Divider />
 
+      <PanelNotesWrapper>
         <FileNotes fileId={file.id} />
-      </PanelContent>
+      </PanelNotesWrapper>
     </PanelRoot>
   );
 };
@@ -103,7 +105,7 @@ const PanelRoot = styled(Box)(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
   height: '100%',
-  overflowY: 'auto',
+  overflow: 'hidden',
 }));
 
 const PanelHeader = styled(Box)(({ theme }) => ({
@@ -111,14 +113,24 @@ const PanelHeader = styled(Box)(({ theme }) => ({
   alignItems: 'center',
   justifyContent: 'space-between',
   padding: theme.spacing(1.5, 2),
+  flexShrink: 0,
 }));
 
-const PanelContent = styled(Box)(({ theme }) => ({
+const PanelStaticContent = styled(Box)(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'center',
   gap: theme.spacing(1.5),
   padding: theme.spacing(2),
+  flexShrink: 0,
+}));
+
+const PanelNotesWrapper = styled(Box)(({ theme }) => ({
+  flex: 1,
+  minHeight: 0,
+  display: 'flex',
+  flexDirection: 'column',
+  padding: theme.spacing(0, 2, 2),
 }));
 
 const PanelIconWrapper = styled(Box)(({ theme }) => ({

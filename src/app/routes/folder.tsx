@@ -23,7 +23,8 @@ export const FolderRoute = () => {
 };
 
 const FolderRouteRoot = styled(Box)({
-  height: '100%',
+  flex: 1,
+  minHeight: 0,
   display: 'flex',
   flexDirection: 'column',
 });

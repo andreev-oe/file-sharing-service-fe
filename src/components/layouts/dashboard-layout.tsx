@@ -92,7 +92,8 @@ export const DashboardLayout = ({ children }: PropsWithChildren) => {
 };
 
 const RootLayout = styled(Stack)({
-  minHeight: '100vh',
+  height: '100vh',
+  overflow: 'hidden',
 });
 
 const Sidebar = styled(Box)(({ theme }) => ({
@@ -180,7 +181,8 @@ const SidebarFooter = styled(Box)(({ theme }) => ({
 const MainArea = styled(Stack)(({ theme }) => ({
   marginLeft: SIDEBAR_WIDTH,
   flex: 1,
-  minHeight: '100vh',
+  minHeight: 0,
+  overflow: 'hidden',
   backgroundColor: theme.palette.background.default,
 }));
 
@@ -205,5 +207,8 @@ const FlexSpacer = styled(Box)({
 
 const MainContent = styled(Box)({
   flex: 1,
-  overflow: 'auto',
+  minHeight: 0,
+  overflowY: 'auto',
+  display: 'flex',
+  flexDirection: 'column',
 }) as typeof Box;
