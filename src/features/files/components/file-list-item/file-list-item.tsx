@@ -49,12 +49,13 @@ const getMimeIcon = (mimeType: string) => {
 export type FileListItemProps = {
   file: FileDto;
   viewMode: 'list' | 'grid';
+  uploaderName?: string;
   isSelected?: boolean;
   onSelect: (file: FileDto) => void;
   onMenuOpen: (event: React.MouseEvent, file: FileDto) => void;
 };
 
-export const FileListItem = ({ file, viewMode, isSelected, onSelect, onMenuOpen }: FileListItemProps) => {
+export const FileListItem = ({ file, viewMode, uploaderName, isSelected, onSelect, onMenuOpen }: FileListItemProps) => {
   const MimeIcon = getMimeIcon(file.mimeType);
 
   const handleClick = () => {
@@ -105,8 +106,8 @@ export const FileListItem = ({ file, viewMode, isSelected, onSelect, onMenuOpen 
       </TableCell>
       <TableCell width={160}>
         <Tooltip title={`ID: ${file.uploadedById}`}>
-          <Typography variant={'body2'} color={'text.secondary'} noWrap sx={{ maxWidth: 140 }}>
-            {file.uploadedById.slice(0, 8)}…
+          <Typography variant={'body2'} color={'text.secondary'} noWrap>
+            {uploaderName ?? `${file.uploadedById.slice(0, 8)}…`}
           </Typography>
         </Tooltip>
       </TableCell>

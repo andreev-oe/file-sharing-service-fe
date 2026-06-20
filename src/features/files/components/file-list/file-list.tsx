@@ -16,9 +16,10 @@ import {
 } from '@mui/material';
 import Grid from '@mui/material/Grid2';
 import { styled } from '@mui/material/styles';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 
 import type { FileDto } from '@/api/generated/types';
+import { useUsers } from '@/features/users/hooks/use-users';
 
 import { useFiles } from '../../hooks/use-files';
 import { useUploadFile } from '../../hooks/use-upload-file';
@@ -42,6 +43,10 @@ export type FileListProps = {
 
 export const FileList = ({ folderId }: FileListProps) => {
   const { data: files, isLoading } = useFiles(folderId);
+  const { data: users } = useUsers();
+  const userNameById = useMemo(() => {
+    return Object.fromEntries(users.map((user) => [user.id, user.name]));
+  }, [users]);
   const { upload, isUploading, uploadProgress } = useUploadFile();
   const [viewMode, setViewMode] = useState<ViewMode>('list');
   const [selectedFile, setSelectedFile] = useState<FileDto | null>(null);
@@ -156,6 +161,7 @@ export const FileList = ({ folderId }: FileListProps) => {
                   key={file.id}
                   file={file}
                   viewMode={'list'}
+                  uploaderName={userNameById[file.uploadedById]}
                   isSelected={selectedFile?.id === file.id}
                   onSelect={handleFileSelect}
                   onMenuOpen={handleMenuOpen}
@@ -173,6 +179,7 @@ export const FileList = ({ folderId }: FileListProps) => {
                   <FileListItem
                     file={file}
                     viewMode={'grid'}
+                    uploaderName={userNameById[file.uploadedById]}
                     isSelected={selectedFile?.id === file.id}
                     onSelect={handleFileSelect}
                     onMenuOpen={handleMenuOpen}
