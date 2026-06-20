@@ -1,3 +1,4 @@
+import DeleteIcon from '@mui/icons-material/Delete';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import { Box, CircularProgress, Divider, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
@@ -8,6 +9,7 @@ import { modals } from '@/components/ui/modals/methods';
 import { EContextModal } from '@/enums/modals.enums';
 import { useAuthStore } from '@/store/auth.store';
 
+import { useDeleteGroup } from '../../hooks/use-delete-group';
 import { useGroupMembers } from '../../hooks/use-group-members';
 import type { AddMemberModalProps } from '../add-member-modal';
 import { MemberList } from '../member-list';
@@ -19,6 +21,7 @@ export type GroupDetailPageProps = {
 export const GroupDetailPage = ({ groupId }: GroupDetailPageProps) => {
   const currentUser = useAuthStore((state) => state.user);
   const { data: members, isLoading } = useGroupMembers(groupId);
+  const { mutate: deleteGroup, isPending: isDeleting } = useDeleteGroup();
 
   const currentMember = members.find((member) => member.userId === currentUser?.id);
   const currentUserRole = currentMember?.role ?? null;
@@ -29,6 +32,18 @@ export const GroupDetailPage = ({ groupId }: GroupDetailPageProps) => {
     modals.openContextModal({
       modal: EContextModal.ADD_MEMBER,
       innerProps: { groupId } satisfies AddMemberModalProps,
+    });
+  };
+
+  const handleDelete = () => {
+    modals.openConfirmModal({
+      title: 'Удалить группу',
+      children: 'Группа и все связанные права доступа будут удалены. Это действие необратимо.',
+      onConfirm: () => {
+        deleteGroup({ id: groupId });
+      },
+      labels: { confirm: 'Удалить', cancel: 'Отмена' },
+      confirmProps: { color: 'error' },
     });
   };
 
@@ -43,11 +58,24 @@ export const GroupDetailPage = ({ groupId }: GroupDetailPageProps) => {
             {`ID группы: ${groupId}`}
           </Typography>
         </Box>
-        {canManage && (
-          <Button variant={'contained'} startIcon={<PersonAddIcon />} onClick={handleAddMember}>
-            Добавить участника
-          </Button>
-        )}
+        <HeaderActions>
+          {canManage && (
+            <Button variant={'contained'} startIcon={<PersonAddIcon />} onClick={handleAddMember}>
+              Добавить участника
+            </Button>
+          )}
+          {isCurrentOwner && (
+            <Button
+              variant={'outlined'}
+              color={'error'}
+              startIcon={<DeleteIcon />}
+              loading={isDeleting}
+              onClick={handleDelete}
+            >
+              Удалить группу
+            </Button>
+          )}
+        </HeaderActions>
       </GroupDetailHeader>
 
       <Divider />
@@ -83,6 +111,12 @@ const GroupDetailHeader = styled(Box)({
   alignItems: 'flex-start',
   justifyContent: 'space-between',
 });
+
+const HeaderActions = styled(Box)(({ theme }) => ({
+  display: 'flex',
+  gap: theme.spacing(1),
+  flexShrink: 0,
+}));
 
 const GroupDetailContent = styled(Box)({
   flex: 1,
