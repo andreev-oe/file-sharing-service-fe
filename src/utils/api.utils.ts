@@ -2,7 +2,6 @@ import { AxiosError } from 'axios';
 
 import type { AuthUser, TokenPair } from '@/types/auth';
 import type { FolderNode } from '@/types/folders';
-
 export function isTokenPair(value: unknown): value is TokenPair {
   return typeof value === 'object' && value !== null && 'accessToken' in value && 'refreshToken' in value;
 }

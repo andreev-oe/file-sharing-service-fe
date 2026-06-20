@@ -6,6 +6,7 @@ import { styled } from '@mui/material/styles';
 
 import type { FileDto } from '@/api/generated/types';
 import { Button } from '@/components/ui/button';
+import { FileNotes } from '@/features/notes/components/file-notes';
 import { formatDate, formatFileSize } from '@/utils/format.utils';
 
 import { useDownloadFile } from '../../hooks/use-download-file';
@@ -86,6 +87,10 @@ export const FileDetailPanel = ({ file, onClose }: FileDetailPanelProps) => {
             Скачать
           </Button>
         </Stack>
+
+        <Divider sx={{ width: '100%' }} />
+
+        <FileNotes fileId={file.id} />
       </PanelContent>
     </PanelRoot>
   );

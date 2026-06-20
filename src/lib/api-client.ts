@@ -1,9 +1,10 @@
-import Axios, { AxiosError, InternalAxiosRequestConfig } from 'axios';
+import Axios, { AxiosError, InternalAxiosRequestConfig, isCancel } from 'axios';
 
 import { notifications } from '@/components/ui/notifications';
 import { env } from '@/config/env';
 import { getRefreshToken, useAuthStore } from '@/store/auth.store';
 import { TokenPair } from '@/types/auth';
+import { getApiErrorMessage } from '@/utils/api.utils';
 
 const REFRESH_URL = '/auth/refresh';
 
@@ -41,6 +42,11 @@ api.interceptors.response.use(
   async (error: AxiosError) => {
     const originalRequest = error.config as InternalAxiosRequestConfig & { _retry?: boolean };
     const status = error.response?.status;
+
+    if (isCancel(error)) {
+      // отмененные запросы не считаются ошибкой
+      return;
+    }
 
     const { accessToken } = useAuthStore.getState();
     if (status === 401 && !originalRequest._retry && originalRequest.url !== REFRESH_URL && accessToken) {
@@ -82,8 +88,7 @@ api.interceptors.response.use(
     }
 
     if (status !== 401) {
-      const message = (error.response?.data as { message?: string })?.message || error.message;
-      notifications.add({ variant: 'error', message });
+      notifications.add({ variant: 'error', message: getApiErrorMessage(error) });
     }
 
     return Promise.reject(error);
