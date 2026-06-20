@@ -9,4 +9,5 @@ export enum EContextModal {
   CREATE_GROUP = 'createGroup',
   ADD_MEMBER = 'addMember',
   TRANSFER_OWNERSHIP = 'transferOwnership',
+  SHARE_FILE = 'shareFile',
 }

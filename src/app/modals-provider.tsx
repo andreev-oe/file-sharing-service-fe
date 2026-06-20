@@ -18,6 +18,8 @@ import { TransferOwnershipModal } from '@/features/groups/components/transfer-ow
 import type { TransferOwnershipModalProps } from '@/features/groups/components/transfer-ownership-modal';
 import type { PermissionsModalProps } from '@/features/permissions/components/permissions-modal';
 import { PermissionsModal } from '@/features/permissions/components/permissions-modal';
+import { ShareLinkModal } from '@/features/share-links/components/share-link-modal';
+import type { ShareLinkModalProps } from '@/features/share-links/components/share-link-modal';
 
 const modals = {
   [EContextModal.EXAMPLE]: (props: ContextModalProps<{ example: string }>) => <div>{props.innerProps.example}</div>,
@@ -32,6 +34,7 @@ const modals = {
   [EContextModal.TRANSFER_OWNERSHIP]: (props: ContextModalProps<TransferOwnershipModalProps>) => (
     <TransferOwnershipModal {...props} />
   ),
+  [EContextModal.SHARE_FILE]: (props: ContextModalProps<ShareLinkModalProps>) => <ShareLinkModal {...props} />,
 } as const;
 
 declare module '@/components/ui/modals/types' {

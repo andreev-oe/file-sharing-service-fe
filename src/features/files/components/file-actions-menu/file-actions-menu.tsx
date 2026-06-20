@@ -3,6 +3,7 @@ import DownloadIcon from '@mui/icons-material/Download';
 import DriveFileMoveIcon from '@mui/icons-material/DriveFileMove';
 import EditIcon from '@mui/icons-material/Edit';
 import HistoryIcon from '@mui/icons-material/History';
+import LinkIcon from '@mui/icons-material/Link';
 import LockOpenIcon from '@mui/icons-material/LockOpen';
 import { Divider, ListItemIcon, ListItemText, Menu, MenuItem } from '@mui/material';
 import { styled } from '@mui/material/styles';
@@ -63,6 +64,17 @@ export const FileActionsMenu = ({ file, folderId, anchorPosition, onClose, onVer
     }
     onClose();
     onVersionsOpen(file);
+  };
+
+  const handleShare = () => {
+    if (!file) {
+      return;
+    }
+    onClose();
+    modals.openContextModal({
+      modal: EContextModal.SHARE_FILE,
+      innerProps: { fileId: file.id, fileName: file.name },
+    });
   };
 
   const handleManageAccess = () => {
@@ -127,6 +139,12 @@ export const FileActionsMenu = ({ file, folderId, anchorPosition, onClose, onVer
           <HistoryIcon fontSize={'small'} />
         </ListItemIcon>
         <ListItemText>Версии</ListItemText>
+      </MenuItem>
+      <MenuItem onClick={handleShare}>
+        <ListItemIcon>
+          <LinkIcon fontSize={'small'} />
+        </ListItemIcon>
+        <ListItemText>Поделиться</ListItemText>
       </MenuItem>
       <MenuItem onClick={handleManageAccess}>
         <ListItemIcon>
