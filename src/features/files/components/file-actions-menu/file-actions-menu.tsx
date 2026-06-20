@@ -3,10 +3,12 @@ import DownloadIcon from '@mui/icons-material/Download';
 import DriveFileMoveIcon from '@mui/icons-material/DriveFileMove';
 import EditIcon from '@mui/icons-material/Edit';
 import HistoryIcon from '@mui/icons-material/History';
+import LockOpenIcon from '@mui/icons-material/LockOpen';
 import { Divider, ListItemIcon, ListItemText, Menu, MenuItem } from '@mui/material';
 import { styled } from '@mui/material/styles';
 
 import type { FileDto } from '@/api/generated/types';
+import { CreatePermissionDtoResourceType } from '@/api/generated/types';
 import { modals } from '@/components/ui/modals/methods';
 import { EContextModal } from '@/enums/modals.enums';
 
@@ -63,6 +65,21 @@ export const FileActionsMenu = ({ file, folderId, anchorPosition, onClose, onVer
     onVersionsOpen(file);
   };
 
+  const handleManageAccess = () => {
+    if (!file) {
+      return;
+    }
+    onClose();
+    modals.openContextModal({
+      modal: EContextModal.MANAGE_ACCESS,
+      innerProps: {
+        resourceId: file.id,
+        resourceType: CreatePermissionDtoResourceType.file,
+        resourceName: file.name,
+      },
+    });
+  };
+
   const handleDelete = () => {
     if (!file) {
       return;
@@ -110,6 +127,12 @@ export const FileActionsMenu = ({ file, folderId, anchorPosition, onClose, onVer
           <HistoryIcon fontSize={'small'} />
         </ListItemIcon>
         <ListItemText>Версии</ListItemText>
+      </MenuItem>
+      <MenuItem onClick={handleManageAccess}>
+        <ListItemIcon>
+          <LockOpenIcon fontSize={'small'} />
+        </ListItemIcon>
+        <ListItemText>Управление доступом</ListItemText>
       </MenuItem>
       <Divider />
       <DeleteMenuItem onClick={handleDelete}>

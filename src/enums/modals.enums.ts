@@ -5,4 +5,5 @@ export enum EContextModal {
   MOVE_FOLDER = 'moveFolder',
   RENAME_FILE = 'renameFile',
   MOVE_FILE = 'moveFile',
+  MANAGE_ACCESS = 'manageAccess',
 }

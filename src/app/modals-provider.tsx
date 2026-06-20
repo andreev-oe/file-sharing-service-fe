@@ -10,6 +10,8 @@ import { MoveFolderModal } from '@/features/folders/components/move-folder-modal
 import type { MoveFolderModalProps } from '@/features/folders/components/move-folder-modal';
 import { RenameFolderModal } from '@/features/folders/components/rename-folder-modal';
 import type { RenameFolderModalProps } from '@/features/folders/components/rename-folder-modal';
+import { PermissionsModal } from '@/features/permissions/components/permissions-modal';
+import type { PermissionsModalProps } from '@/features/permissions/components/permissions-modal';
 
 const modals = {
   [EContextModal.EXAMPLE]: (props: ContextModalProps<{ example: string }>) => <div>{props.innerProps.example}</div>,
@@ -18,6 +20,7 @@ const modals = {
   [EContextModal.MOVE_FOLDER]: (props: ContextModalProps<MoveFolderModalProps>) => <MoveFolderModal {...props} />,
   [EContextModal.RENAME_FILE]: (props: ContextModalProps<RenameFileModalProps>) => <RenameFileModal {...props} />,
   [EContextModal.MOVE_FILE]: (props: ContextModalProps<MoveFileModalProps>) => <MoveFileModal {...props} />,
+  [EContextModal.MANAGE_ACCESS]: (props: ContextModalProps<PermissionsModalProps>) => <PermissionsModal {...props} />,
 } as const;
 
 declare module '@/components/ui/modals/types' {

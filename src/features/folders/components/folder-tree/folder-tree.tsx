@@ -1,10 +1,12 @@
 import CreateNewFolderIcon from '@mui/icons-material/CreateNewFolder';
+import LockOpenIcon from '@mui/icons-material/LockOpen';
 import { Box, CircularProgress, Divider, IconButton, Menu, MenuItem, Tooltip, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { SimpleTreeView } from '@mui/x-tree-view/SimpleTreeView';
 import { useState } from 'react';
 import { useMatch } from 'react-router-dom';
 
+import { CreatePermissionDtoResourceType } from '@/api/generated/types';
 import { modals } from '@/components/ui/modals/methods';
 import { paths } from '@/config/paths';
 import { EContextModal } from '@/enums/modals.enums';
@@ -90,6 +92,21 @@ export const FolderTree = () => {
     });
   };
 
+  const handleManageAccess = () => {
+    if (!contextMenu) {
+      return;
+    }
+    handleCloseMenu();
+    modals.openContextModal({
+      modal: EContextModal.MANAGE_ACCESS,
+      innerProps: {
+        resourceId: contextMenu.node.id,
+        resourceType: CreatePermissionDtoResourceType.folder,
+        resourceName: contextMenu.node.name,
+      },
+    });
+  };
+
   const handleDelete = () => {
     if (!contextMenu) {
       return;
@@ -157,6 +174,10 @@ export const FolderTree = () => {
         </MenuItem>
         <MenuItem onClick={handleRename}>Переименовать</MenuItem>
         <MenuItem onClick={handleMove}>Переместить</MenuItem>
+        <MenuItem onClick={handleManageAccess}>
+          <LockOpenIcon fontSize={'small'} />
+          Управление доступом
+        </MenuItem>
         <Divider />
         <DeleteMenuItem onClick={handleDelete}>Удалить</DeleteMenuItem>
       </Menu>
