@@ -3,7 +3,7 @@ import HistoryIcon from '@mui/icons-material/History';
 import { Box, CircularProgress, Divider, Drawer, IconButton, Stack, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
 
-import type { FileRecord } from '@/types/files';
+import type { FileDto } from '@/api/generated/types';
 import { formatDate, formatFileSize } from '@/utils/format.utils';
 
 import { useFileVersions } from '../../hooks/use-file-versions';
@@ -11,7 +11,7 @@ import { useFileVersions } from '../../hooks/use-file-versions';
 const VERSIONS_DRAWER_WIDTH = 320;
 
 export type FileVersionsDrawerProps = {
-  file: FileRecord | null;
+  file: FileDto | null;
   onClose: () => void;
 };
 
@@ -62,7 +62,7 @@ export const FileVersionsDrawer = ({ file, onClose }: FileVersionsDrawerProps) =
                   </Typography>
                 </Box>
                 <Typography variant={'caption'} color={'text.secondary'} noWrap>
-                  {formatDate(new Date(version.uploadedAt).getTime())}
+                  {formatDate(new Date(version.updatedAt).getTime())}
                 </Typography>
               </Stack>
               {index < versions.length - 1 && <Divider sx={{ mt: 1.5 }} />}

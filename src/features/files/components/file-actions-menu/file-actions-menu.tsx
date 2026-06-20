@@ -6,19 +6,19 @@ import HistoryIcon from '@mui/icons-material/History';
 import { Divider, ListItemIcon, ListItemText, Menu, MenuItem } from '@mui/material';
 import { styled } from '@mui/material/styles';
 
+import type { FileDto } from '@/api/generated/types';
 import { modals } from '@/components/ui/modals/methods';
 import { EContextModal } from '@/enums/modals.enums';
-import type { FileRecord } from '@/types/files';
 
 import { useDeleteFile } from '../../hooks/use-delete-file';
 import { useDownloadFile } from '../../hooks/use-download-file';
 
 export type FileActionsMenuProps = {
-  file: FileRecord | null;
+  file: FileDto | null;
   folderId: string;
   anchorPosition: { top: number; left: number } | null;
   onClose: () => void;
-  onVersionsOpen: (file: FileRecord) => void;
+  onVersionsOpen: (file: FileDto) => void;
 };
 
 export const FileActionsMenu = ({ file, folderId, anchorPosition, onClose, onVersionsOpen }: FileActionsMenuProps) => {

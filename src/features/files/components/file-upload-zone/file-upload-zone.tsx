@@ -69,27 +69,29 @@ export const FileUploadZone = ({ onFilesSelected, isUploading }: FileUploadZoneP
   );
 };
 
-const UploadZoneRoot = styled(Box)<{ $isDragOver: boolean; $isDisabled: boolean }>(
-  ({ theme, $isDragOver, $isDisabled }) => ({
-    border: `2px dashed ${$isDragOver ? theme.palette.primary.main : theme.palette.divider}`,
-    borderRadius: theme.shape.borderRadius,
-    padding: theme.spacing(4),
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    gap: theme.spacing(1),
-    cursor: $isDisabled ? 'not-allowed' : 'pointer',
-    backgroundColor: $isDragOver ? theme.palette.action.hover : 'transparent',
-    transition: 'border-color 0.2s, background-color 0.2s',
-    opacity: $isDisabled ? 0.6 : 1,
-    '&:hover': {
-      borderColor: $isDisabled ? theme.palette.divider : theme.palette.primary.main,
-      backgroundColor: $isDisabled ? 'transparent' : theme.palette.action.hover,
-    },
-  }),
-);
+const UploadZoneRoot = styled(Box, {
+  shouldForwardProp: (prop) => prop !== '$isDragOver' && prop !== '$isDisabled',
+})<{ $isDragOver: boolean; $isDisabled: boolean }>(({ theme, $isDragOver, $isDisabled }) => ({
+  border: `2px dashed ${$isDragOver ? theme.palette.primary.main : theme.palette.divider}`,
+  borderRadius: theme.shape.borderRadius,
+  padding: theme.spacing(4),
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'center',
+  gap: theme.spacing(1),
+  cursor: $isDisabled ? 'not-allowed' : 'pointer',
+  backgroundColor: $isDragOver ? theme.palette.action.hover : 'transparent',
+  transition: 'border-color 0.2s, background-color 0.2s',
+  opacity: $isDisabled ? 0.6 : 1,
+  '&:hover': {
+    borderColor: $isDisabled ? theme.palette.divider : theme.palette.primary.main,
+    backgroundColor: $isDisabled ? 'transparent' : theme.palette.action.hover,
+  },
+}));
 
-const UploadIcon = styled(CloudUploadIcon)<{ $isDragOver: boolean }>(({ theme, $isDragOver }) => ({
+const UploadIcon = styled(CloudUploadIcon, {
+  shouldForwardProp: (prop) => prop !== '$isDragOver',
+})<{ $isDragOver: boolean }>(({ theme, $isDragOver }) => ({
   fontSize: 40,
   color: $isDragOver ? theme.palette.primary.main : theme.palette.text.disabled,
   transition: 'color 0.2s',

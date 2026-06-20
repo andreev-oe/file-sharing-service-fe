@@ -4,14 +4,14 @@ import InsertDriveFileIcon from '@mui/icons-material/InsertDriveFile';
 import { Box, Chip, Divider, IconButton, Stack, Tooltip, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
 
+import type { FileDto } from '@/api/generated/types';
 import { Button } from '@/components/ui/button';
-import type { FileRecord } from '@/types/files';
 import { formatDate, formatFileSize } from '@/utils/format.utils';
 
 import { useDownloadFile } from '../../hooks/use-download-file';
 
 export type FileDetailPanelProps = {
-  file: FileRecord;
+  file: FileDto;
   onClose: () => void;
 };
 
@@ -70,7 +70,7 @@ export const FileDetailPanel = ({ file, onClose }: FileDetailPanelProps) => {
               Загружен
             </MetaLabel>
             <MetaValue variant={'caption'} noWrap>
-              {formatDate(new Date(file.uploadedAt).getTime())}
+              {formatDate(new Date(file.createdAt).getTime())}
             </MetaValue>
           </MetaRow>
         </MetaList>

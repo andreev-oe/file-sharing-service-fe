@@ -8,10 +8,10 @@ import MoreVertIcon from '@mui/icons-material/MoreVert';
 import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
 import TableChartIcon from '@mui/icons-material/TableChart';
 import VideocamIcon from '@mui/icons-material/Videocam';
-import { Box, Card, IconButton, TableCell, TableRow, Tooltip, Typography } from '@mui/material';
+import { Box, Card, Chip, IconButton, TableCell, TableRow, Tooltip, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
 
-import type { FileRecord } from '@/types/files';
+import type { FileDto } from '@/api/generated/types';
 import { formatDate, formatFileSize } from '@/utils/format.utils';
 
 const ARCHIVE_MIME_PATTERNS = ['zip', 'rar', 'tar', '7z', 'gz', 'bz2'];
@@ -47,11 +47,11 @@ const getMimeIcon = (mimeType: string) => {
 };
 
 export type FileListItemProps = {
-  file: FileRecord;
+  file: FileDto;
   viewMode: 'list' | 'grid';
   isSelected?: boolean;
-  onSelect: (file: FileRecord) => void;
-  onMenuOpen: (event: React.MouseEvent, file: FileRecord) => void;
+  onSelect: (file: FileDto) => void;
+  onMenuOpen: (event: React.MouseEvent, file: FileDto) => void;
 };
 
 export const FileListItem = ({ file, viewMode, isSelected, onSelect, onMenuOpen }: FileListItemProps) => {
@@ -95,15 +95,25 @@ export const FileListItem = ({ file, viewMode, isSelected, onSelect, onMenuOpen 
           {file.name}
         </Typography>
       </TableCell>
-      <TableCell width={100}>
+      <TableCell width={80}>
         <Typography variant={'body2'} color={'text.secondary'} noWrap>
           {formatFileSize(file.size)}
         </Typography>
       </TableCell>
-      <TableCell width={180}>
-        <Tooltip title={formatDate(new Date(file.uploadedAt).getTime())}>
+      <TableCell width={60} align={'center'}>
+        <VersionChip label={`v${file.version}`} size={'small'} variant={'outlined'} color={'primary'} />
+      </TableCell>
+      <TableCell width={160}>
+        <Tooltip title={`ID: ${file.uploadedById}`}>
+          <Typography variant={'body2'} color={'text.secondary'} noWrap sx={{ maxWidth: 140 }}>
+            {file.uploadedById.slice(0, 8)}…
+          </Typography>
+        </Tooltip>
+      </TableCell>
+      <TableCell width={160}>
+        <Tooltip title={formatDate(new Date(file.updatedAt).getTime())}>
           <Typography variant={'body2'} color={'text.secondary'} noWrap>
-            {formatDate(new Date(file.uploadedAt).getTime())}
+            {formatDate(new Date(file.updatedAt).getTime())}
           </Typography>
         </Tooltip>
       </TableCell>
@@ -116,7 +126,9 @@ export const FileListItem = ({ file, viewMode, isSelected, onSelect, onMenuOpen 
   );
 };
 
-const FileTableRow = styled(TableRow)<{ $isSelected: boolean }>(({ theme, $isSelected }) => ({
+const FileTableRow = styled(TableRow, {
+  shouldForwardProp: (prop) => prop !== '$isSelected',
+})<{ $isSelected: boolean }>(({ theme, $isSelected }) => ({
   cursor: 'pointer',
   backgroundColor: $isSelected ? theme.palette.action.selected : 'transparent',
   '&:hover': {
@@ -130,7 +142,14 @@ const ListMimeIcon = styled(InsertDriveFileIcon)(({ theme }) => ({
   display: 'block',
 }));
 
-const FileGridCard = styled(Card)<{ $isSelected: boolean }>(({ theme, $isSelected }) => ({
+const VersionChip = styled(Chip)({
+  fontSize: 11,
+  height: 20,
+});
+
+const FileGridCard = styled(Card, {
+  shouldForwardProp: (prop) => prop !== '$isSelected',
+})<{ $isSelected: boolean }>(({ theme, $isSelected }) => ({
   position: 'relative',
   padding: theme.spacing(2),
   display: 'flex',

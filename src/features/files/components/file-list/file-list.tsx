@@ -18,7 +18,7 @@ import Grid from '@mui/material/Grid2';
 import { styled } from '@mui/material/styles';
 import { useState } from 'react';
 
-import type { FileRecord } from '@/types/files';
+import type { FileDto } from '@/api/generated/types';
 
 import { useFiles } from '../../hooks/use-files';
 import { useUploadFile } from '../../hooks/use-upload-file';
@@ -33,7 +33,7 @@ type ViewMode = 'list' | 'grid';
 
 type ActionsMenuState = {
   anchorPosition: { top: number; left: number };
-  file: FileRecord;
+  file: FileDto;
 };
 
 export type FileListProps = {
@@ -44,9 +44,9 @@ export const FileList = ({ folderId }: FileListProps) => {
   const { data: files, isLoading } = useFiles(folderId);
   const { upload, isUploading, uploadProgress } = useUploadFile();
   const [viewMode, setViewMode] = useState<ViewMode>('list');
-  const [selectedFile, setSelectedFile] = useState<FileRecord | null>(null);
+  const [selectedFile, setSelectedFile] = useState<FileDto | null>(null);
   const [actionsMenu, setActionsMenu] = useState<ActionsMenuState | null>(null);
-  const [versionsFile, setVersionsFile] = useState<FileRecord | null>(null);
+  const [versionsFile, setVersionsFile] = useState<FileDto | null>(null);
   const [uploadingFileName, setUploadingFileName] = useState('');
 
   const handleFilesSelected = async (files: File[]) => {
@@ -57,11 +57,11 @@ export const FileList = ({ folderId }: FileListProps) => {
     setUploadingFileName('');
   };
 
-  const handleFileSelect = (file: FileRecord) => {
+  const handleFileSelect = (file: FileDto) => {
     setSelectedFile((previous) => (previous?.id === file.id ? null : file));
   };
 
-  const handleMenuOpen = (event: React.MouseEvent, file: FileRecord) => {
+  const handleMenuOpen = (event: React.MouseEvent, file: FileDto) => {
     setActionsMenu({ anchorPosition: { top: event.clientY, left: event.clientX }, file });
   };
 
@@ -69,7 +69,7 @@ export const FileList = ({ folderId }: FileListProps) => {
     setActionsMenu(null);
   };
 
-  const handleVersionsOpen = (file: FileRecord) => {
+  const handleVersionsOpen = (file: FileDto) => {
     setVersionsFile(file);
   };
 
@@ -143,8 +143,10 @@ export const FileList = ({ folderId }: FileListProps) => {
               <TableRow>
                 <TableCell width={40} />
                 <TableCell>Название</TableCell>
-                <TableCell width={100}>Размер</TableCell>
-                <TableCell width={180}>Дата</TableCell>
+                <TableCell width={80}>Размер</TableCell>
+                <TableCell width={60}>Версия</TableCell>
+                <TableCell width={160}>Автор</TableCell>
+                <TableCell width={160}>Изменён</TableCell>
                 <TableCell width={48} padding={'none'} />
               </TableRow>
             </TableHead>
