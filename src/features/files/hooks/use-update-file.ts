@@ -2,7 +2,6 @@ import {
   getFilesControllerFindByFolderQueryKey,
   useFilesControllerUpdate,
 } from '@/api/generated/endpoints/files/files';
-import type { UpdateFileDtoFolderId } from '@/api/generated/types';
 import { useNotifications } from '@/components/ui/notifications';
 import { queryClient } from '@/lib/react-query';
 import { getApiErrorMessage } from '@/utils/api.utils';
@@ -29,8 +28,7 @@ export const useUpdateFile = (folderId: string) => {
       id,
       data: {
         name: data.name,
-        // orval mistype: generates { [key: string]: unknown } | null instead of string | null
-        folderId: data.folderId as unknown as UpdateFileDtoFolderId,
+        folderId: data.folderId,
       },
     });
   };

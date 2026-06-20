@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { devtools } from 'zustand/middleware';
 
-import { AuthUser } from '@/types/auth';
+import type { UserProfileDto } from '@/api/generated/types';
 
 const REFRESH_TOKEN_KEY = 'refresh_token';
 
@@ -9,10 +9,10 @@ export const getRefreshToken = (): string | null => localStorage.getItem(REFRESH
 
 interface AuthStore {
   accessToken: string | null;
-  user: AuthUser | null;
+  user: UserProfileDto | null;
   isAuthenticated: boolean;
   setTokens: (accessToken: string, refreshToken: string) => void;
-  setUser: (user: AuthUser) => void;
+  setUser: (user: UserProfileDto) => void;
   clearAuth: () => void;
 }
 

@@ -4,10 +4,10 @@ import { SimpleTreeView } from '@mui/x-tree-view/SimpleTreeView';
 import { TreeItem } from '@mui/x-tree-view/TreeItem';
 import { useState } from 'react';
 
+import type { FolderTreeNodeDto } from '@/api/generated/types';
 import { Button } from '@/components/ui/button';
 import { ContextModalProps } from '@/components/ui/modals';
 import { modals } from '@/components/ui/modals/methods';
-import type { FolderNode } from '@/types/folders';
 
 import { useFolderTree } from '../../hooks/use-folder-tree';
 import { useUpdateFolder } from '../../hooks/use-update-folder';
@@ -17,7 +17,7 @@ export type MoveFolderModalProps = {
   folderName: string;
 };
 
-const renderTreeNodes = (nodes: FolderNode[], excludeId: string): React.ReactNode => {
+const renderTreeNodes = (nodes: FolderTreeNodeDto[], excludeId: string): React.ReactNode => {
   return nodes
     .filter((node) => node.id !== excludeId)
     .map((node) => (

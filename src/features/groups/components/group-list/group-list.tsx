@@ -57,7 +57,7 @@ export const GroupList = () => {
               <GroupCard
                 groupId={group.id}
                 name={group.name}
-                description={group.description}
+                description={group.description ?? undefined}
                 createdAt={group.createdAt}
               />
             </Grid>

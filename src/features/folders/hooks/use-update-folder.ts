@@ -2,7 +2,6 @@ import {
   getFoldersControllerGetTreeQueryKey,
   useFoldersControllerUpdate,
 } from '@/api/generated/endpoints/folders/folders';
-import type { UpdateFolderDtoParentId } from '@/api/generated/types';
 import { useNotifications } from '@/components/ui/notifications';
 import { queryClient } from '@/lib/react-query';
 import { getApiErrorMessage } from '@/utils/api.utils';
@@ -32,8 +31,7 @@ export const useUpdateFolder = () => {
       id,
       data: {
         name: data.name,
-        // orval mistype: generates { [key: string]: unknown } | null instead of string | null
-        parentId: data.parentId as unknown as UpdateFolderDtoParentId,
+        parentId: data.parentId,
       },
     });
   };

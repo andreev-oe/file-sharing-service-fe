@@ -14,10 +14,10 @@ import {
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
 
-import { AddMemberDtoRole as MemberRole } from '@/api/generated/types';
+import type { GroupMemberDto } from '@/api/generated/types';
+import { GroupMemberDtoRole as MemberRole } from '@/api/generated/types';
 import { modals } from '@/components/ui/modals/methods';
 import { EContextModal } from '@/enums/modals.enums';
-import type { GroupMember } from '@/types/groups';
 
 import { useRemoveMember } from '../../hooks/use-remove-member';
 import { MemberRoleChip } from '../member-role-chip';
@@ -26,7 +26,7 @@ import type { TransferOwnershipModalProps } from '../transfer-ownership-modal';
 const OWNER_REMOVE_WARNING = 'Нельзя удалить владельца. Сначала передайте права другому участнику.';
 
 type MemberRowProps = {
-  member: GroupMember;
+  member: GroupMemberDto;
   groupId: string;
   canManage: boolean;
   isCurrentOwner: boolean;
@@ -35,11 +35,13 @@ type MemberRowProps = {
 const MemberRow = ({ member, groupId, canManage, isCurrentOwner }: MemberRowProps) => {
   const { mutate: removeMember, isPending } = useRemoveMember(groupId);
   const isOwner = member.role === MemberRole.owner;
+  const memberName = member.user?.name ?? '';
+  const memberAvatarUrl = member.user?.avatarUrl ?? undefined;
 
   const handleRemove = () => {
     modals.openConfirmModal({
       title: 'Удалить участника',
-      children: `Удалить ${member.user.name} из группы?`,
+      children: `Удалить ${memberName} из группы?`,
       onConfirm: () => {
         removeMember({ id: groupId, userId: member.userId });
       },
@@ -52,15 +54,15 @@ const MemberRow = ({ member, groupId, canManage, isCurrentOwner }: MemberRowProp
     <TableRow>
       <TableCell>
         <MemberIdentity>
-          <Avatar src={member.user.avatarUrl ?? undefined} alt={member.user.name}>
-            {member.user.name.charAt(0).toUpperCase()}
+          <Avatar src={memberAvatarUrl} alt={memberName}>
+            {memberName.charAt(0).toUpperCase()}
           </Avatar>
           <MemberNames>
             <Typography variant={'body2'} fontWeight={500}>
-              {member.user.name}
+              {memberName}
             </Typography>
             <Typography variant={'caption'} color={'text.secondary'}>
-              @{member.user.username}
+              @{member.user?.username}
             </Typography>
           </MemberNames>
         </MemberIdentity>
@@ -97,7 +99,7 @@ const MemberRow = ({ member, groupId, canManage, isCurrentOwner }: MemberRowProp
 
 export type MemberListProps = {
   groupId: string;
-  members: GroupMember[];
+  members: GroupMemberDto[];
   canManage: boolean;
   isCurrentOwner: boolean;
 };

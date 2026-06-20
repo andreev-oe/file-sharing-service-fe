@@ -6,11 +6,11 @@ import { SimpleTreeView } from '@mui/x-tree-view/SimpleTreeView';
 import { useState } from 'react';
 import { useMatch } from 'react-router-dom';
 
+import type { FolderTreeNodeDto } from '@/api/generated/types';
 import { CreatePermissionDtoResourceType } from '@/api/generated/types';
 import { modals } from '@/components/ui/modals/methods';
 import { paths } from '@/config/paths';
 import { EContextModal } from '@/enums/modals.enums';
-import type { FolderNode } from '@/types/folders';
 
 import { useDeleteFolder } from '../../hooks/use-delete-folder';
 import { useFolderTree } from '../../hooks/use-folder-tree';
@@ -21,10 +21,11 @@ const MAX_FOLDER_DEPTH = 10;
 type ContextMenuState = {
   mouseX: number;
   mouseY: number;
-  node: FolderNode;
+  node: FolderTreeNodeDto;
+  depth: number;
 };
 
-const findAncestorIds = (nodes: FolderNode[], targetId: string, path: string[] = []): string[] => {
+const findAncestorIds = (nodes: FolderTreeNodeDto[], targetId: string, path: string[] = []): string[] => {
   for (const node of nodes) {
     if (node.id === targetId) {
       return path;
@@ -44,8 +45,8 @@ export const FolderTree = () => {
   const folderMatch = useMatch(paths.folder.path);
   const activeFolderId = folderMatch?.params?.folderId ?? null;
 
-  const handleContextMenu = (event: React.MouseEvent, node: FolderNode) => {
-    setContextMenu({ mouseX: event.clientX, mouseY: event.clientY, node });
+  const handleContextMenu = (event: React.MouseEvent, node: FolderTreeNodeDto, depth: number) => {
+    setContextMenu({ mouseX: event.clientX, mouseY: event.clientY, node, depth });
   };
 
   const handleCloseMenu = () => {
@@ -155,7 +156,7 @@ export const FolderTree = () => {
           defaultExpandedItems={activeFolderId ? findAncestorIds(tree, activeFolderId) : []}
         >
           {tree.map((node) => (
-            <FolderTreeNode key={node.id} node={node} onContextMenu={handleContextMenu} />
+            <FolderTreeNode key={node.id} node={node} depth={0} onContextMenu={handleContextMenu} />
           ))}
         </SimpleTreeView>
       )}
@@ -166,10 +167,7 @@ export const FolderTree = () => {
         anchorReference={'anchorPosition'}
         anchorPosition={contextMenu ? { top: contextMenu.mouseY, left: contextMenu.mouseX } : undefined}
       >
-        <MenuItem
-          onClick={handleCreateSubfolder}
-          disabled={!!contextMenu && contextMenu.node.depth >= MAX_FOLDER_DEPTH}
-        >
+        <MenuItem onClick={handleCreateSubfolder} disabled={!!contextMenu && contextMenu.depth >= MAX_FOLDER_DEPTH}>
           Создать папку
         </MenuItem>
         <MenuItem onClick={handleRename}>Переименовать</MenuItem>

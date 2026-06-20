@@ -88,7 +88,7 @@ export const AddMemberModal = ({ id, innerProps }: ContextModalProps<AddMemberMo
               renderOption={(props, user) => (
                 <ListItem {...props} key={user.id}>
                   <ListItemAvatar>
-                    <Avatar src={typeof user.avatarUrl === 'string' ? user.avatarUrl : undefined} alt={user.name}>
+                    <Avatar src={user.avatarUrl ?? undefined} alt={user.name}>
                       {user.name.charAt(0).toUpperCase()}
                     </Avatar>
                   </ListItemAvatar>

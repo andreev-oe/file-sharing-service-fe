@@ -1,9 +1,9 @@
 import Axios, { AxiosError, InternalAxiosRequestConfig, isCancel } from 'axios';
 
+import { TokensDto } from '@/api/generated/types';
 import { notifications } from '@/components/ui/notifications';
 import { env } from '@/config/env';
 import { getRefreshToken, useAuthStore } from '@/store/auth.store';
-import { TokenPair } from '@/types/auth';
 import { getApiErrorMessage } from '@/utils/api.utils';
 
 const REFRESH_URL = '/auth/refresh';
@@ -72,7 +72,7 @@ api.interceptors.response.use(
       }
 
       try {
-        const response = await api.post<TokenPair>(REFRESH_URL, { refreshToken });
+        const response = await api.post<TokensDto>(REFRESH_URL, { refreshToken });
         const { accessToken: newAccessToken, refreshToken: newRefreshToken } = response.data;
         useAuthStore.getState().setTokens(newAccessToken, newRefreshToken);
         processQueue(null, newAccessToken);

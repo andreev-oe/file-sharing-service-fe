@@ -74,7 +74,7 @@ export const DashboardLayout = ({ children }: PropsWithChildren) => {
 
         <SidebarFooter>
           <Typography variant={'caption'} color={'text.secondary'}>
-            © 2025 FileShare Pro
+            © 2026 FileShare Pro
           </Typography>
         </SidebarFooter>
       </Sidebar>

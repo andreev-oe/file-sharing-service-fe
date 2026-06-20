@@ -4,16 +4,17 @@ import { styled } from '@mui/material/styles';
 import { TreeItem } from '@mui/x-tree-view/TreeItem';
 import { useNavigate } from 'react-router-dom';
 
+import type { FolderTreeNodeDto } from '@/api/generated/types';
 import { paths } from '@/config/paths';
-import type { FolderNode } from '@/types/folders';
 import { formatFileSize } from '@/utils/format.utils';
 
 export type FolderTreeNodeProps = {
-  node: FolderNode;
-  onContextMenu: (event: React.MouseEvent, node: FolderNode) => void;
+  node: FolderTreeNodeDto;
+  depth: number;
+  onContextMenu: (event: React.MouseEvent, node: FolderTreeNodeDto, depth: number) => void;
 };
 
-export const FolderTreeNode = ({ node, onContextMenu }: FolderTreeNodeProps) => {
+export const FolderTreeNode = ({ node, depth, onContextMenu }: FolderTreeNodeProps) => {
   const navigate = useNavigate();
 
   const handleLabelClick = (event: React.MouseEvent) => {
@@ -24,7 +25,7 @@ export const FolderTreeNode = ({ node, onContextMenu }: FolderTreeNodeProps) => 
   const handleContextMenu = (event: React.MouseEvent) => {
     event.preventDefault();
     event.stopPropagation();
-    onContextMenu(event, node);
+    onContextMenu(event, node, depth);
   };
 
   const label = (
@@ -39,7 +40,7 @@ export const FolderTreeNode = ({ node, onContextMenu }: FolderTreeNodeProps) => 
   return (
     <TreeItem itemId={node.id} label={label}>
       {node.children.map((child) => (
-        <FolderTreeNode key={child.id} node={child} onContextMenu={onContextMenu} />
+        <FolderTreeNode key={child.id} node={child} depth={depth + 1} onContextMenu={onContextMenu} />
       ))}
     </TreeItem>
   );

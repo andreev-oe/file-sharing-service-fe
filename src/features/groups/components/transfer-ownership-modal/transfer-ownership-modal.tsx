@@ -3,11 +3,11 @@ import { DialogActions, DialogContent, DialogTitle, FormControl, InputLabel, Men
 import { Controller, useForm } from 'react-hook-form';
 import { z } from 'zod';
 
-import { AddMemberDtoRole as MemberRole } from '@/api/generated/types';
+import type { GroupMemberDto } from '@/api/generated/types';
+import { GroupMemberDtoRole as MemberRole } from '@/api/generated/types';
 import { Button } from '@/components/ui/button';
 import { ContextModalProps } from '@/components/ui/modals';
 import { modals } from '@/components/ui/modals/methods';
-import type { GroupMember } from '@/types/groups';
 
 import { useTransferOwnership } from '../../hooks/use-transfer-ownership';
 
@@ -19,7 +19,7 @@ type TransferOwnershipFormValues = z.infer<typeof transferOwnershipSchema>;
 
 export type TransferOwnershipModalProps = {
   groupId: string;
-  members: GroupMember[];
+  members: GroupMemberDto[];
 };
 
 export const TransferOwnershipModal = ({ id, innerProps }: ContextModalProps<TransferOwnershipModalProps>) => {
@@ -55,7 +55,7 @@ export const TransferOwnershipModal = ({ id, innerProps }: ContextModalProps<Tra
               <Select labelId={'new-owner-label'} label={'Новый владелец'} {...field} error={!!errors.newOwnerId}>
                 {candidates.map((member) => (
                   <MenuItem key={member.userId} value={member.userId}>
-                    {member.user.name} (@{member.user.username})
+                    {member.user?.name} (@{member.user?.username})
                   </MenuItem>
                 ))}
               </Select>
