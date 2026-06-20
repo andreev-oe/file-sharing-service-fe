@@ -8,6 +8,7 @@ import { Link, useLocation } from 'react-router-dom';
 
 import { paths } from '@/config/paths';
 import { UserMenu } from '@/features/auth/components/user-menu';
+import { FolderTree } from '@/features/folders/components/folder-tree';
 
 const SIDEBAR_WIDTH = 240;
 const HEADER_HEIGHT = 64;
@@ -65,6 +66,10 @@ export const DashboardLayout = ({ children }: PropsWithChildren) => {
               <SidebarNavItem key={item.to} {...item} />
             ))}
           </List>
+
+          <SidebarDivider />
+
+          <FolderTree />
         </NavigationArea>
 
         <SidebarFooter>
@@ -156,6 +161,12 @@ const NavListItemButton = styled(ListItemButton)(({ theme }) => ({
 const CompactListItemIcon = styled(ListItemIcon)({
   minWidth: 36,
 });
+
+const SidebarDivider = styled(Box)(({ theme }) => ({
+  borderTop: `1px solid ${theme.palette.divider}`,
+  marginTop: theme.spacing(1),
+  marginBottom: theme.spacing(0.5),
+}));
 
 const SidebarFooter = styled(Box)(({ theme }) => ({
   paddingLeft: theme.spacing(2),

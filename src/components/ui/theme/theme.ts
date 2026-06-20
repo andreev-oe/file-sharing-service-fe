@@ -1,6 +1,6 @@
-import { createTheme } from '@mui/material';
 import { orange } from '@mui/material/colors';
 import { ruRU as coreRU } from '@mui/material/locale';
+import { alpha, createTheme } from '@mui/material/styles';
 
 import { componentOverrides } from '@/components/ui/theme/overrides/component.overrides';
 
@@ -41,3 +41,5 @@ export const theme = createTheme(
   },
   coreRU,
 );
+
+Object.assign(theme, { alpha });
