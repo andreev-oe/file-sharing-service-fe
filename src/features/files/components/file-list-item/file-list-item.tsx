@@ -1,51 +1,12 @@
-import ArchiveIcon from '@mui/icons-material/Archive';
-import ArticleIcon from '@mui/icons-material/Article';
-import AudioFileIcon from '@mui/icons-material/AudioFile';
-import DescriptionIcon from '@mui/icons-material/Description';
-import ImageIcon from '@mui/icons-material/Image';
 import InsertDriveFileIcon from '@mui/icons-material/InsertDriveFile';
 import LinkIcon from '@mui/icons-material/Link';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
-import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
-import TableChartIcon from '@mui/icons-material/TableChart';
-import VideocamIcon from '@mui/icons-material/Videocam';
 import { Box, Card, Chip, IconButton, TableCell, TableRow, Tooltip, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
 
 import type { FileDto } from '@/api/generated/types';
+import { getMimeIcon } from '@/utils/file.utils';
 import { formatDate, formatFileSize } from '@/utils/format.utils';
-
-const ARCHIVE_MIME_PATTERNS = ['zip', 'rar', 'tar', '7z', 'gz', 'bz2'];
-const SPREADSHEET_MIME_PATTERNS = ['spreadsheet', 'excel', 'csv'];
-const WORD_MIME_PATTERNS = ['word', 'document'];
-
-const getMimeIcon = (mimeType: string) => {
-  if (mimeType.startsWith('image/')) {
-    return ImageIcon;
-  }
-  if (mimeType === 'application/pdf') {
-    return PictureAsPdfIcon;
-  }
-  if (mimeType.startsWith('video/')) {
-    return VideocamIcon;
-  }
-  if (mimeType.startsWith('audio/')) {
-    return AudioFileIcon;
-  }
-  if (ARCHIVE_MIME_PATTERNS.some((pattern) => mimeType.includes(pattern))) {
-    return ArchiveIcon;
-  }
-  if (SPREADSHEET_MIME_PATTERNS.some((pattern) => mimeType.includes(pattern))) {
-    return TableChartIcon;
-  }
-  if (WORD_MIME_PATTERNS.some((pattern) => mimeType.includes(pattern))) {
-    return ArticleIcon;
-  }
-  if (mimeType.startsWith('text/') || mimeType.includes('json') || mimeType.includes('xml')) {
-    return DescriptionIcon;
-  }
-  return InsertDriveFileIcon;
-};
 
 export type FileListItemProps = {
   file: FileDto;

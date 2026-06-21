@@ -9,6 +9,7 @@ import { Link, useLocation } from 'react-router-dom';
 import { paths } from '@/config/paths';
 import { UserMenu } from '@/features/auth/components/user-menu';
 import { FolderTree } from '@/features/folders/components/folder-tree';
+import { GlobalSearch } from '@/features/search/components/global-search';
 
 const SIDEBAR_WIDTH = 240;
 const HEADER_HEIGHT = 64;
@@ -81,6 +82,7 @@ export const DashboardLayout = ({ children }: PropsWithChildren) => {
 
       <MainArea>
         <AppHeader component={'header'}>
+          <GlobalSearch />
           <FlexSpacer />
           <UserMenu />
         </AppHeader>
