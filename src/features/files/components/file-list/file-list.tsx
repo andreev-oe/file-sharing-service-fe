@@ -3,7 +3,6 @@ import InsertDriveFileIcon from '@mui/icons-material/InsertDriveFile';
 import ViewListIcon from '@mui/icons-material/ViewList';
 import {
   Box,
-  CircularProgress,
   IconButton,
   Stack,
   Table,
@@ -30,6 +29,9 @@ import { FileListItem } from '../file-list-item';
 import { FileUploadProgress } from '../file-upload-progress';
 import { FileUploadZone } from '../file-upload-zone';
 import { FileVersionsDrawer } from '../file-versions-drawer';
+
+import { FileListSkeletonGrid } from './file-list-skeleton-grid';
+import { FileListSkeletonRows } from './file-list-skeleton-rows';
 
 type ViewMode = 'list' | 'grid';
 
@@ -126,13 +128,7 @@ export const FileList = ({ folderId }: FileListProps) => {
           )}
         </UploadSection>
 
-        {isLoading && (
-          <Stack alignItems={'center'} py={6}>
-            <CircularProgress />
-          </Stack>
-        )}
-
-        {!isLoading && files.length === 0 && (
+        {files.length === 0 && !isLoading && (
           <EmptyState>
             <EmptyStateIcon />
             <Typography variant={'body1'} color={'text.secondary'}>
@@ -144,7 +140,7 @@ export const FileList = ({ folderId }: FileListProps) => {
           </EmptyState>
         )}
 
-        {!isLoading && files.length > 0 && viewMode === 'list' && (
+        {viewMode === 'list' && (isLoading || files.length > 0) && (
           <Table size={'small'}>
             <TableHead>
               <TableRow>
@@ -158,38 +154,46 @@ export const FileList = ({ folderId }: FileListProps) => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {files.map((file) => (
-                <FileListItem
-                  key={file.id}
-                  file={file}
-                  viewMode={'list'}
-                  uploaderName={userNameById[file.uploadedById]}
-                  isSelected={selectedFile?.id === file.id}
-                  isShared={sharedFileIds.has(file.id)}
-                  onSelect={handleFileSelect}
-                  onMenuOpen={handleMenuOpen}
-                />
-              ))}
-            </TableBody>
-          </Table>
-        )}
-
-        {!isLoading && files.length > 0 && viewMode === 'grid' && (
-          <GridContainer>
-            <Grid container spacing={1.5}>
-              {files.map((file) => (
-                <Grid key={file.id} size={{ xs: 6, sm: 4, md: 3, lg: 2 }}>
+              {isLoading ? (
+                <FileListSkeletonRows />
+              ) : (
+                files.map((file) => (
                   <FileListItem
+                    key={file.id}
                     file={file}
-                    viewMode={'grid'}
+                    viewMode={'list'}
                     uploaderName={userNameById[file.uploadedById]}
                     isSelected={selectedFile?.id === file.id}
                     isShared={sharedFileIds.has(file.id)}
                     onSelect={handleFileSelect}
                     onMenuOpen={handleMenuOpen}
                   />
-                </Grid>
-              ))}
+                ))
+              )}
+            </TableBody>
+          </Table>
+        )}
+
+        {viewMode === 'grid' && (isLoading || files.length > 0) && (
+          <GridContainer>
+            <Grid container spacing={1.5}>
+              {isLoading ? (
+                <FileListSkeletonGrid />
+              ) : (
+                files.map((file) => (
+                  <Grid key={file.id} size={{ xs: 6, sm: 4, md: 3, lg: 2 }}>
+                    <FileListItem
+                      file={file}
+                      viewMode={'grid'}
+                      uploaderName={userNameById[file.uploadedById]}
+                      isSelected={selectedFile?.id === file.id}
+                      isShared={sharedFileIds.has(file.id)}
+                      onSelect={handleFileSelect}
+                      onMenuOpen={handleMenuOpen}
+                    />
+                  </Grid>
+                ))
+              )}
             </Grid>
           </GridContainer>
         )}
