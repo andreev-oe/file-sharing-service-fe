@@ -5,12 +5,14 @@ import DescriptionIcon from '@mui/icons-material/Description';
 import ImageIcon from '@mui/icons-material/Image';
 import InsertDriveFileIcon from '@mui/icons-material/InsertDriveFile';
 import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
+import SlideshowIcon from '@mui/icons-material/Slideshow';
 import TableChartIcon from '@mui/icons-material/TableChart';
 import VideocamIcon from '@mui/icons-material/Videocam';
 
 const ARCHIVE_MIME_PATTERNS = ['zip', 'rar', 'tar', '7z', 'gz', 'bz2'];
-const SPREADSHEET_MIME_PATTERNS = ['spreadsheet', 'excel', 'csv'];
-const WORD_MIME_PATTERNS = ['word', 'document'];
+const SPREADSHEET_MIME_PATTERNS = ['spreadsheet', 'excel', 'csv', 'numbers'];
+const PRESENTATION_MIME_PATTERNS = ['powerpoint', 'presentation', 'keynote'];
+const WORD_MIME_PATTERNS = ['word', 'document', 'pages', 'rtf'];
 
 export const getMimeIcon = (mimeType: string) => {
   if (mimeType.startsWith('image/')) {
@@ -38,6 +40,13 @@ export const getMimeIcon = (mimeType: string) => {
     })
   ) {
     return TableChartIcon;
+  }
+  if (
+    PRESENTATION_MIME_PATTERNS.some((pattern) => {
+      return mimeType.includes(pattern);
+    })
+  ) {
+    return SlideshowIcon;
   }
   if (
     WORD_MIME_PATTERNS.some((pattern) => {
