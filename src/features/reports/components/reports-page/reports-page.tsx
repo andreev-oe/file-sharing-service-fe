@@ -1,5 +1,5 @@
 import AssessmentIcon from '@mui/icons-material/Assessment';
-import { Box, Divider, Stack, Table, TableBody, TableCell, TableHead, TableRow, Typography } from '@mui/material';
+import { Box, Divider, Stack, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { useMemo } from 'react';
 
@@ -8,7 +8,7 @@ import { useUsers } from '@/features/users/hooks/use-users';
 
 import { useReportHistory } from '../../hooks/use-report-history';
 import { CreateReportForm } from '../create-report-form';
-import { ReportJobRow } from '../report-job-row';
+import { ReportJobsTable } from '../report-jobs-table';
 
 export const ReportsPage = () => {
   const { jobs, addJob } = useReportHistory();
@@ -40,28 +40,7 @@ export const ReportsPage = () => {
               Задачи появятся здесь после создания отчёта
             </Typography>
           ) : (
-            <Table size={'small'}>
-              <TableHead>
-                <TableRow>
-                  <TableCell>Статус</TableCell>
-                  <TableCell>ID задачи</TableCell>
-                  <TableCell>Формат</TableCell>
-                  <TableCell>Инициатор</TableCell>
-                  <TableCell>Создана</TableCell>
-                  <TableCell>Прогресс</TableCell>
-                  <TableCell />
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {jobs.map((job) => (
-                  <ReportJobRow
-                    key={job.jobId}
-                    job={job}
-                    requestedByName={userNameById[job.requestedById] ?? job.requestedById}
-                  />
-                ))}
-              </TableBody>
-            </Table>
+            <ReportJobsTable jobs={jobs} userNameById={userNameById} />
           )}
         </HistorySection>
       </ReportsPageRoot>

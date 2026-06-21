@@ -65,7 +65,7 @@ export const ReportJobRow = ({ job, requestedByName }: ReportJobRowProps) => {
 
   return (
     <FixedHeightTableRow>
-      <TableCell width={160}>
+      <TableCell>
         <Stack direction={'row'} alignItems={'center'} gap={0.75}>
           {isActive ? (
             <SpinningStatusIcon as={config.Icon} $status={statusKey} />
@@ -82,19 +82,19 @@ export const ReportJobRow = ({ job, requestedByName }: ReportJobRowProps) => {
         <JobIdLabel variant={'body2'}>{job.jobId}</JobIdLabel>
       </TableCell>
 
-      <TableCell width={80}>
+      <TableCell>
         {job.format && (
           <FormatChip label={job.format.toUpperCase()} size={'small'} variant={'outlined'} $format={job.format} />
         )}
       </TableCell>
 
-      <TableCell width={180}>
+      <TableCell>
         <Typography variant={'body2'} color={'text.secondary'} noWrap>
           {requestedByName}
         </Typography>
       </TableCell>
 
-      <TableCell width={200}>
+      <TableCell>
         <Typography variant={'body2'} color={'text.secondary'} noWrap>
           {formatDate(new Date(job.createdAt).getTime())}
         </Typography>
@@ -116,7 +116,7 @@ export const ReportJobRow = ({ job, requestedByName }: ReportJobRowProps) => {
         )}
       </TableCell>
 
-      <TableCell width={140} align={'right'}>
+      <TableCell align={'right'}>
         {isCompleted && (
           <Button
             size={'small'}
