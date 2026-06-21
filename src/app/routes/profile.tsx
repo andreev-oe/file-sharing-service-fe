@@ -14,7 +14,7 @@ export const ProfileRoute = () => {
   return (
     <>
       <Head title={'Профиль'} />
-      <Box p={3} maxWidth={720} mx={'auto'}>
+      <ProfilePageRoot>
         <Typography variant={'h5'} mb={3}>
           Профиль
         </Typography>
@@ -64,10 +64,16 @@ export const ProfileRoute = () => {
             </PaddedCardContent>
           </Card>
         </Stack>
-      </Box>
+      </ProfilePageRoot>
     </>
   );
 };
+
+const ProfilePageRoot = styled(Box)(({ theme }) => ({
+  flex: 1,
+  padding: theme.spacing(3),
+  overflowY: 'auto',
+}));
 
 const PaddedCardContent = styled(CardContent)(({ theme }) => ({
   padding: theme.spacing(3),

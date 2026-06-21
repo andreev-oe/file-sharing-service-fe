@@ -1,18 +1,37 @@
+import GridViewIcon from '@mui/icons-material/GridView';
 import GroupIcon from '@mui/icons-material/Group';
 import GroupAddIcon from '@mui/icons-material/GroupAdd';
-import { Box, CircularProgress, Typography } from '@mui/material';
+import ViewListIcon from '@mui/icons-material/ViewList';
+import {
+  Box,
+  IconButton,
+  Skeleton,
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableRow,
+  Tooltip,
+  Typography,
+} from '@mui/material';
 import Grid from '@mui/material/Grid2';
 import { styled } from '@mui/material/styles';
+import { useState } from 'react';
 
 import { Button } from '@/components/ui/button';
 import { modals } from '@/components/ui/modals/methods';
 import { EContextModal } from '@/enums/modals.enums';
 
 import { useGroups } from '../../hooks/use-groups';
-import { GroupCard } from '../group-card';
+import { GroupListItem } from '../group-list-item';
+
+const SKELETON_COUNT = 6;
+
+type ViewMode = 'list' | 'grid';
 
 export const GroupList = () => {
   const { data: groups, isLoading } = useGroups();
+  const [viewMode, setViewMode] = useState<ViewMode>('list');
 
   const handleCreateGroup = () => {
     modals.openContextModal({
@@ -27,16 +46,36 @@ export const GroupList = () => {
         <Typography variant={'h5'} fontWeight={600}>
           Группы
         </Typography>
-        <Button variant={'contained'} startIcon={<GroupAddIcon />} onClick={handleCreateGroup}>
-          Создать группу
-        </Button>
+        <HeaderRight>
+          <ViewToggleGroup>
+            <Tooltip title={'Таблица'}>
+              <IconButton
+                size={'small'}
+                color={viewMode === 'list' ? 'primary' : 'default'}
+                onClick={() => {
+                  setViewMode('list');
+                }}
+              >
+                <ViewListIcon />
+              </IconButton>
+            </Tooltip>
+            <Tooltip title={'Карточки'}>
+              <IconButton
+                size={'small'}
+                color={viewMode === 'grid' ? 'primary' : 'default'}
+                onClick={() => {
+                  setViewMode('grid');
+                }}
+              >
+                <GridViewIcon />
+              </IconButton>
+            </Tooltip>
+          </ViewToggleGroup>
+          <Button variant={'contained'} startIcon={<GroupAddIcon />} onClick={handleCreateGroup}>
+            Создать группу
+          </Button>
+        </HeaderRight>
       </GroupListHeader>
-
-      {isLoading && (
-        <LoadingBox>
-          <CircularProgress />
-        </LoadingBox>
-      )}
 
       {!isLoading && groups.length === 0 && (
         <EmptyState>
@@ -50,19 +89,59 @@ export const GroupList = () => {
         </EmptyState>
       )}
 
-      {!isLoading && groups.length > 0 && (
+      {viewMode === 'grid' && (
         <Grid container spacing={2}>
-          {groups.map((group) => (
-            <Grid key={group.id} size={{ xs: 12, sm: 6, md: 4 }}>
-              <GroupCard
-                groupId={group.id}
-                name={group.name}
-                description={group.description ?? undefined}
-                createdAt={group.createdAt}
-              />
-            </Grid>
-          ))}
+          {isLoading
+            ? Array.from({ length: SKELETON_COUNT }).map((_, index) => (
+                <Grid key={index} size={{ xs: 12, sm: 6, md: 4 }}>
+                  <Skeleton variant={'rounded'} height={120} />
+                </Grid>
+              ))
+            : groups.map((group) => (
+                <Grid key={group.id} size={{ xs: 12, sm: 6, md: 4 }}>
+                  <GroupListItem group={group} viewMode={'grid'} />
+                </Grid>
+              ))}
         </Grid>
+      )}
+
+      {viewMode === 'list' && (isLoading || groups.length > 0) && (
+        <Table size={'small'}>
+          <TableHead>
+            <TableRow>
+              <TableCell width={40} />
+              <TableCell>Название</TableCell>
+              <TableCell width={200}>Владелец</TableCell>
+              <TableCell width={100} align={'center'}>
+                Участники
+              </TableCell>
+              <TableCell width={200}>Создана</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {isLoading
+              ? Array.from({ length: SKELETON_COUNT }).map((_, index) => (
+                  <TableRow key={index}>
+                    <TableCell>
+                      <Skeleton variant={'circular'} width={20} height={20} />
+                    </TableCell>
+                    <TableCell>
+                      <Skeleton width={'60%'} />
+                    </TableCell>
+                    <TableCell>
+                      <Skeleton width={'80%'} />
+                    </TableCell>
+                    <TableCell>
+                      <Skeleton width={40} />
+                    </TableCell>
+                    <TableCell>
+                      <Skeleton width={'70%'} />
+                    </TableCell>
+                  </TableRow>
+                ))
+              : groups.map((group) => <GroupListItem key={group.id} group={group} viewMode={'list'} />)}
+          </TableBody>
+        </Table>
       )}
     </GroupListRoot>
   );
@@ -70,20 +149,26 @@ export const GroupList = () => {
 
 const GroupListRoot = styled(Box)(({ theme }) => ({
   padding: theme.spacing(3),
+  display: 'flex',
+  flexDirection: 'column',
+  gap: theme.spacing(2),
 }));
 
-const GroupListHeader = styled(Box)(({ theme }) => ({
+const GroupListHeader = styled(Box)({
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'space-between',
-  marginBottom: theme.spacing(3),
-}));
+});
 
-const LoadingBox = styled(Box)({
+const HeaderRight = styled(Box)({
   display: 'flex',
-  justifyContent: 'center',
-  paddingTop: 64,
-  paddingBottom: 64,
+  alignItems: 'center',
+  gap: 8,
+});
+
+const ViewToggleGroup = styled(Box)({
+  display: 'flex',
+  gap: 2,
 });
 
 const EmptyState = styled(Box)(({ theme }) => ({

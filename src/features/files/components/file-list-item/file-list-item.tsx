@@ -50,6 +50,7 @@ export const FileListItem = ({
         <GridMeta variant={'caption'} color={'text.secondary'}>
           {formatFileSize(file.size)}
         </GridMeta>
+        <VersionChip label={`v${file.version}`} size={'small'} variant={'outlined'} color={'primary'} />
         <GridMenuButton size={'small'} onClick={handleMenuClick}>
           <MoreVertIcon fontSize={'small'} />
         </GridMenuButton>

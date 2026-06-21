@@ -1,11 +1,14 @@
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import DeleteIcon from '@mui/icons-material/Delete';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import { Box, CircularProgress, Divider, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
+import { useNavigate } from 'react-router-dom';
 
 import { AddMemberDtoRole as MemberRole } from '@/api/generated/types';
 import { Button } from '@/components/ui/button';
 import { modals } from '@/components/ui/modals/methods';
+import { paths } from '@/config/paths';
 import { EContextModal } from '@/enums/modals.enums';
 import { useAuthStore } from '@/store/auth.store';
 
@@ -19,6 +22,7 @@ export type GroupDetailPageProps = {
 };
 
 export const GroupDetailPage = ({ groupId }: GroupDetailPageProps) => {
+  const navigate = useNavigate();
   const currentUser = useAuthStore((state) => state.user);
   const { data: members, isLoading } = useGroupMembers(groupId);
   const { mutate: deleteGroup, isPending: isDeleting } = useDeleteGroup();
@@ -27,6 +31,10 @@ export const GroupDetailPage = ({ groupId }: GroupDetailPageProps) => {
   const currentUserRole = currentMember?.role ?? null;
   const canManage = currentUserRole === MemberRole.owner || currentUserRole === MemberRole.admin;
   const isCurrentOwner = currentUserRole === MemberRole.owner;
+
+  const handleBack = () => {
+    navigate(paths.groups.getHref());
+  };
 
   const handleAddMember = () => {
     modals.openContextModal({
@@ -50,14 +58,14 @@ export const GroupDetailPage = ({ groupId }: GroupDetailPageProps) => {
   return (
     <GroupDetailRoot>
       <GroupDetailHeader>
-        <Box>
+        <HeaderLeft>
+          <Button startIcon={<ArrowBackIcon />} onClick={handleBack}>
+            Все группы
+          </Button>
           <Typography variant={'h5'} fontWeight={600}>
             Участники группы
           </Typography>
-          <Typography variant={'body2'} color={'text.secondary'}>
-            {`ID группы: ${groupId}`}
-          </Typography>
-        </Box>
+        </HeaderLeft>
         <HeaderActions>
           {canManage && (
             <Button variant={'contained'} startIcon={<PersonAddIcon />} onClick={handleAddMember}>
@@ -108,9 +116,15 @@ const GroupDetailRoot = styled(Box)(({ theme }) => ({
 
 const GroupDetailHeader = styled(Box)({
   display: 'flex',
-  alignItems: 'flex-start',
+  alignItems: 'center',
   justifyContent: 'space-between',
 });
+
+const HeaderLeft = styled(Box)(({ theme }) => ({
+  display: 'flex',
+  alignItems: 'center',
+  gap: theme.spacing(2),
+}));
 
 const HeaderActions = styled(Box)(({ theme }) => ({
   display: 'flex',
