@@ -3,8 +3,9 @@ import DownloadIcon from '@mui/icons-material/Download';
 import ErrorIcon from '@mui/icons-material/Error';
 import HourglassEmptyIcon from '@mui/icons-material/HourglassEmpty';
 import SyncIcon from '@mui/icons-material/Sync';
-import { Box, Chip, LinearProgress, Stack, TableCell, TableRow, Typography } from '@mui/material';
+import { Box, Chip, LinearProgress, Skeleton, Stack, TableCell, TableRow, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
+import { useEffect } from 'react';
 
 import type { ReportJobDto, ReportStatusDto } from '@/api/generated/types';
 import { ReportJobDtoFormat } from '@/api/generated/types';
@@ -45,13 +46,16 @@ const toInitialStatusDto = (job: ReportJobDto): ReportStatusDto => {
 export type ReportJobRowProps = {
   job: ReportJobDto;
   requestedByName: string;
+  onJobUpdate: (job: ReportJobDto) => void;
+  isInitiatorLoading: boolean;
 };
 
-export const ReportJobRow = ({ job, requestedByName }: ReportJobRowProps) => {
+export const ReportJobRow = ({ job, requestedByName, onJobUpdate, isInitiatorLoading }: ReportJobRowProps) => {
   const { data } = useReportStatus(job.jobId, toInitialStatusDto(job));
   const { download, isLoading: isDownloading } = useDownloadReport();
 
-  const statusKey = data?.status && isJobStatus(data.status) ? data.status : 'waiting';
+  const rawStatus = data?.status ?? '';
+  const statusKey: JobStatus = isJobStatus(rawStatus) ? rawStatus : 'waiting';
   const progress = data?.progress ?? INITIAL_PROGRESS;
   const config = STATUS_CONFIG[statusKey];
   const isActive = statusKey === STATUS_ACTIVE;
@@ -62,6 +66,12 @@ export const ReportJobRow = ({ job, requestedByName }: ReportJobRowProps) => {
   const handleDownload = () => {
     void download(job.jobId);
   };
+
+  useEffect(() => {
+    if (isTerminal && rawStatus !== job.status) {
+      onJobUpdate({ ...job, status: rawStatus });
+    }
+  }, [isTerminal, rawStatus]);
 
   return (
     <FixedHeightTableRow>
@@ -89,9 +99,13 @@ export const ReportJobRow = ({ job, requestedByName }: ReportJobRowProps) => {
       </TableCell>
 
       <TableCell>
-        <Typography variant={'body2'} color={'text.secondary'} noWrap>
-          {requestedByName}
-        </Typography>
+        {isInitiatorLoading ? (
+          <Skeleton variant={'text'} width={120} />
+        ) : (
+          <Typography variant={'body2'} color={'text.secondary'} noWrap>
+            {requestedByName}
+          </Typography>
+        )}
       </TableCell>
 
       <TableCell>

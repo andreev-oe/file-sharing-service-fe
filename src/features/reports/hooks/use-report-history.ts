@@ -35,5 +35,13 @@ export const useReportHistory = () => {
     });
   };
 
-  return { jobs, addJob };
+  const updateJob = (updatedJob: ReportJobDto) => {
+    setJobs((previous) => {
+      const updated = previous.map((existing) => (existing.jobId === updatedJob.jobId ? updatedJob : existing));
+      localStorage.setItem(REPORT_HISTORY_KEY, JSON.stringify(updated));
+      return updated;
+    });
+  };
+
+  return { jobs, addJob, updateJob };
 };

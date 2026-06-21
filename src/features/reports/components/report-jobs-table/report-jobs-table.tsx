@@ -1,4 +1,5 @@
 import { Table, TableBody, TableCell, TableHead, TableRow } from '@mui/material';
+import { styled } from '@mui/material/styles';
 
 import type { ReportJobDto } from '@/api/generated/types';
 
@@ -14,6 +15,8 @@ type ColumnConfig = {
 export type ReportJobsTableProps = {
   jobs: ReportJobDto[];
   userNameById: Record<string, string>;
+  onJobUpdate: (job: ReportJobDto) => void;
+  isUsersLoading: boolean;
 };
 
 const COLUMNS: ColumnConfig[] = [
@@ -26,9 +29,9 @@ const COLUMNS: ColumnConfig[] = [
   { key: 'actions', label: '', width: 140, align: 'right' },
 ];
 
-export const ReportJobsTable = ({ jobs, userNameById }: ReportJobsTableProps) => {
+export const ReportJobsTable = ({ jobs, userNameById, onJobUpdate, isUsersLoading }: ReportJobsTableProps) => {
   return (
-    <Table size={'small'}>
+    <FixedLayoutTable size={'small'}>
       <TableHead>
         <TableRow>
           {COLUMNS.map((column) => (
@@ -44,9 +47,16 @@ export const ReportJobsTable = ({ jobs, userNameById }: ReportJobsTableProps) =>
             key={job.jobId}
             job={job}
             requestedByName={userNameById[job.requestedById] ?? job.requestedById}
+            onJobUpdate={onJobUpdate}
+            isInitiatorLoading={isUsersLoading}
           />
         ))}
       </TableBody>
-    </Table>
+    </FixedLayoutTable>
   );
 };
+
+const FixedLayoutTable = styled(Table)({
+  tableLayout: 'fixed',
+  width: '100%',
+});

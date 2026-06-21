@@ -11,8 +11,8 @@ import { CreateReportForm } from '../create-report-form';
 import { ReportJobsTable } from '../report-jobs-table';
 
 export const ReportsPage = () => {
-  const { jobs, addJob } = useReportHistory();
-  const { data: users } = useUsers();
+  const { jobs, addJob, updateJob } = useReportHistory();
+  const { data: users, isPending: isUsersPending } = useUsers();
   const userNameById = useMemo(() => {
     return Object.fromEntries(users.map((user) => [user.id, user.name]));
   }, [users]);
@@ -40,7 +40,12 @@ export const ReportsPage = () => {
               Задачи появятся здесь после создания отчёта
             </Typography>
           ) : (
-            <ReportJobsTable jobs={jobs} userNameById={userNameById} />
+            <ReportJobsTable
+              jobs={jobs}
+              userNameById={userNameById}
+              onJobUpdate={updateJob}
+              isUsersLoading={isUsersPending}
+            />
           )}
         </HistorySection>
       </ReportsPageRoot>
