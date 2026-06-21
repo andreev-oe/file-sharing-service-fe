@@ -56,14 +56,11 @@ export const FileList = ({ folderId }: FileListProps) => {
   const [selectedFile, setSelectedFile] = useState<FileDto | null>(null);
   const [actionsMenu, setActionsMenu] = useState<ActionsMenuState | null>(null);
   const [versionsFile, setVersionsFile] = useState<FileDto | null>(null);
-  const [uploadingFileName, setUploadingFileName] = useState('');
 
   const handleFilesSelected = async (files: File[]) => {
     for (const file of files) {
-      setUploadingFileName(file.name);
       await upload({ folderId, file });
     }
-    setUploadingFileName('');
   };
 
   const handleFileSelect = (file: FileDto) => {
@@ -123,8 +120,10 @@ export const FileList = ({ folderId }: FileListProps) => {
 
         <UploadSection>
           <FileUploadZone onFilesSelected={handleFilesSelected} isUploading={isUploading} />
-          {isUploading && uploadingFileName && (
-            <FileUploadProgress fileName={uploadingFileName} progress={uploadProgress} />
+          {isUploading && (
+            <UploadProgressOverlay>
+              <FileUploadProgress progress={uploadProgress} />
+            </UploadProgressOverlay>
           )}
         </UploadSection>
 
@@ -241,10 +240,18 @@ const ViewToggleGroup = styled(Box)({
 });
 
 const UploadSection = styled(Box)(({ theme }) => ({
+  position: 'relative',
   padding: theme.spacing(0, 3, 2, 3),
   display: 'flex',
   flexDirection: 'column',
   gap: theme.spacing(1),
+}));
+
+const UploadProgressOverlay = styled(Box)(({ theme }) => ({
+  position: 'absolute',
+  bottom: 4,
+  left: theme.spacing(3),
+  right: theme.spacing(3),
 }));
 
 const EmptyState = styled(Stack)(({ theme }) => ({
