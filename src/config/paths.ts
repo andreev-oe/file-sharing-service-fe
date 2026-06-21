@@ -21,6 +21,7 @@ export const paths = {
     getHref: (groupId: string) => `/groups/${groupId}`,
   },
   reports: { path: '/reports', getHref: () => '/reports' },
+  permissions: { path: '/permissions', getHref: () => '/permissions' },
   share: {
     path: '/share/:token',
     getHref: (token: string) => `/share/${token}`,

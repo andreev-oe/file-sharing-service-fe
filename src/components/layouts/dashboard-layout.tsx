@@ -1,6 +1,7 @@
 import AssessmentIcon from '@mui/icons-material/Assessment';
 import FolderOpenIcon from '@mui/icons-material/FolderOpen';
 import GroupIcon from '@mui/icons-material/Group';
+import LockOpenIcon from '@mui/icons-material/LockOpen';
 import { Box, List, ListItemButton, ListItemIcon, ListItemText, Stack, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { PropsWithChildren, ReactNode } from 'react';
@@ -25,6 +26,7 @@ type NavItem = {
 const NAV_ITEMS: NavItem[] = [
   { icon: <FolderOpenIcon fontSize={'small'} />, label: 'Мой диск', to: paths.drive.getHref() },
   { icon: <GroupIcon fontSize={'small'} />, label: 'Группы', to: paths.groups.getHref() },
+  { icon: <LockOpenIcon fontSize={'small'} />, label: 'Доступ', to: paths.permissions.getHref() },
   { icon: <AssessmentIcon fontSize={'small'} />, label: 'Отчёты', to: paths.reports.getHref() },
 ];
 

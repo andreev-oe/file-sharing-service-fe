@@ -87,6 +87,13 @@ const createAppRouter = () =>
                   return { Component: ReportsRoute };
                 },
               },
+              {
+                path: paths.permissions.path,
+                lazy: async () => {
+                  const { PermissionsRoute } = await import('./routes/permissions');
+                  return { Component: PermissionsRoute };
+                },
+              },
             ],
           },
         ],
